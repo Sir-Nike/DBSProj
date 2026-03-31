@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.collegequiz.controller.TeacherReviewController">
+    <top>
+        <VBox spacing="12" styleClass="page-shell">
+            <VBox spacing="6" styleClass="hero-panel">
+                <Label text="Review / Publish Results" styleClass="hero-title"/>
+                <Label fx:id="teacherLabel" text="Teacher"/>
+            </VBox>
+            <HBox spacing="10">
+                <Button text="Back" onAction="#handleBack" styleClass="button secondary"/>
+                <Button text="Refresh" onAction="#handleRefresh"/>
+                <Button text="Publish Selected" onAction="#handlePublish"/>
+                <Button text="Unpublish Selected" onAction="#handleUnpublish" styleClass="button danger"/>
+            </HBox>
+        </VBox>
+    </top>
+    <center>
+        <VBox styleClass="page-shell">
+            <VBox styleClass="card">
+                <Label text="Teacher Dashboard" styleClass="section-title"/>
+                <TableView fx:id="dashboardTable" prefHeight="500">
+                    <columns>
+                        <TableColumn fx:id="quizIdColumn" text="Quiz ID" prefWidth="90"/>
+                        <TableColumn fx:id="titleColumn" text="Title" prefWidth="300"/>
+                        <TableColumn fx:id="subjectColumn" text="Subject" prefWidth="220"/>
+                        <TableColumn fx:id="attemptsColumn" text="Attempts" prefWidth="100"/>
+                        <TableColumn fx:id="marksColumn" text="Marks" prefWidth="90"/>
+                        <TableColumn fx:id="publishedColumn" text="Published" prefWidth="100"/>
+                    </columns>
+                </TableView>
+            </VBox>
+        </VBox>
+    </center>
+</BorderPane>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.collegequiz.controller.QuizAttemptController">
+    <top>
+        <VBox spacing="12" styleClass="page-shell">
+            <VBox spacing="6" styleClass="hero-panel">
+                <Label text="Quiz Attempt" styleClass="hero-title"/>
+                <Label fx:id="quizTitleLabel" text="Quiz Title"/>
+                <Label fx:id="quizMetaLabel" text="Meta"/>
+                <Label fx:id="timerLabel" text="Time Left: 00:00" styleClass="timer-badge"/>
+            </VBox>
+            <HBox spacing="10">
+                <Button text="Back to Dashboard" onAction="#handleBackToDashboard" styleClass="button secondary"/>
+                <Button text="Previous" onAction="#handlePrev" styleClass="button secondary"/>
+                <Button text="Next" onAction="#handleNext"/>
+                <Button text="Submit Quiz" onAction="#handleSubmit"/>
+            </HBox>
+        </VBox>
+    </top>
+    <center>
+        <VBox spacing="18" alignment="CENTER" styleClass="page-shell">
+            <VBox spacing="12" maxWidth="760" styleClass="card">
+                <Label fx:id="progressLabel" text="Question 1 of 1" styleClass="section-title"/>
+                <Label fx:id="questionTextLabel" text="Question text" wrapText="true" styleClass="question-title"/>
+                <VBox fx:id="optionsContainer" spacing="10"/>
+            </VBox>
+        </VBox>
+    </center>
+</BorderPane>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.collegequiz.controller.StudentDashboardController">
+    <top>
+        <VBox spacing="14" styleClass="page-shell">
+            <VBox spacing="6" styleClass="hero-panel">
+                <Label text="Student Dashboard" styleClass="hero-title"/>
+                <Label fx:id="studentNameLabel" text="Student"/>
+                <Label fx:id="registrationLabel" text="Reg No"/>
+                <Label fx:id="departmentLabel" text="Department"/>
+            </VBox>
+            <HBox spacing="12">
+                <Button text="Refresh" onAction="#handleRefresh"/>
+                <Button text="Start Selected Quiz" onAction="#handleStartQuiz"/>
+                <Button text="Logout" onAction="#handleLogout" styleClass="button secondary"/>
+            </HBox>
+        </VBox>
+    </top>
+    <center>
+        <VBox spacing="16" styleClass="page-shell">
+            <VBox spacing="10" styleClass="card">
+                <Label text="Available Quizzes" styleClass="section-title"/>
+                <TableView fx:id="quizTable" prefHeight="270">
+                    <columns>
+                        <TableColumn fx:id="quizIdColumn" text="Quiz ID" prefWidth="90"/>
+                        <TableColumn fx:id="quizTitleColumn" text="Title" prefWidth="280"/>
+                        <TableColumn fx:id="subjectColumn" text="Subject" prefWidth="250"/>
+                        <TableColumn fx:id="durationColumn" text="Minutes" prefWidth="90"/>
+                        <TableColumn fx:id="marksColumn" text="Marks" prefWidth="90"/>
+                        <TableColumn fx:id="publishedColumn" text="Published" prefWidth="100"/>
+                    </columns>
+                </TableView>
+            </VBox>
+            <VBox spacing="10" styleClass="card" VBox.vgrow="ALWAYS">
+                <Label text="Published Results" styleClass="section-title"/>
+                <TableView fx:id="resultTable" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="resultQuizIdColumn" text="Quiz ID" prefWidth="90"/>
+                        <TableColumn fx:id="resultQuizTitleColumn" text="Quiz Title" prefWidth="300"/>
+                        <TableColumn fx:id="resultScoreColumn" text="Score" prefWidth="100"/>
+                        <TableColumn fx:id="resultPercentColumn" text="Percent" prefWidth="100"/>
+                        <TableColumn fx:id="resultTimeColumn" text="Submitted At" prefWidth="220"/>
+                    </columns>
+                </TableView>
+            </VBox>
+        </VBox>
+    </center>
+</BorderPane>
