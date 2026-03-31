@@ -19,6 +19,11 @@
     -fx-border-color: #dce5f0;
 }
 
+.soft-panel {
+    -fx-background-color: rgba(255, 255, 255, 0.96);
+    -fx-border-color: #dce5f0;
+}
+
 .title-xxl,
 .title-lg,
 .section-title,
@@ -69,10 +74,35 @@
 .table-view {
     -fx-background-color: white;
     -fx-border-color: #dce5f0;
+    -fx-control-inner-background: white;
+    -fx-control-inner-background-alt: #f8fbff;
+    -fx-selection-bar: rgba(31, 102, 255, 0.16);
+    -fx-selection-bar-non-focused: rgba(31, 102, 255, 0.16);
 }
 
 .table-view .column-header-background {
     -fx-background-color: #f0f4fa;
+}
+
+.table-view .table-cell {
+    -fx-text-fill: #14243b;
+}
+
+.table-view .table-row-cell:selected .table-cell {
+    -fx-text-fill: #14243b;
+}
+
+.table-view .table-row-cell {
+    -fx-background-color: white;
+    -fx-border-color: transparent transparent rgba(29, 47, 73, 0.06) transparent;
+}
+
+.table-view .table-row-cell:odd {
+    -fx-background-color: #f8fbff;
+}
+
+.table-view .table-row-cell:selected {
+    -fx-background-color: rgba(31, 102, 255, 0.16);
 }
 
 .timer-badge {
@@ -88,4 +118,19 @@
 .option-chip {
     -fx-background-color: #edf3f9;
     -fx-text-fill: #22334a;
+}
+
+.radio-button {
+    -fx-text-fill: #22334a;
+    -fx-mark-color: #1f66ff;
+}
+
+.attempt-option {
+    -fx-background-color: #f8fbff;
+    -fx-border-color: #dce5f0;
+}
+
+.attempt-option:selected {
+    -fx-background-color: rgba(31, 102, 255, 0.12);
+    -fx-border-color: #1f66ff;
 }

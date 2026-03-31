@@ -48,7 +48,7 @@ public class QuizAttemptController extends BaseController {
         }
 
         quizTitleLabel.setText(quiz.quizTitle());
-        quizMetaLabel.setText("Quiz #" + quiz.quizId() + " | Total Marks: " + quiz.totalMarks());
+        quizMetaLabel.setText("Duration: " + quiz.durationMinutes() + " min | Total Marks: " + quiz.totalMarks());
         remainingSeconds = quiz.durationMinutes() * 60;
         questions = service.getQuestionsByQuiz(quizId);
         if (questions == null || questions.isEmpty()) {
@@ -105,11 +105,22 @@ public class QuizAttemptController extends BaseController {
         questionTextLabel.setText(question.displayOrder() + ". " + question.questionText());
         optionsContainer.getChildren().clear();
 
+        List<QuestionOption> options = service.getOptionsByQuestion(question.questionId());
+        if (options == null || options.size() != 4) {
+            showError("Question Not Ready", "This question must have exactly four answer options.");
+            stopTimer();
+            QuizRuntimeContext.clear();
+            AppNavigator.showStudentDashboard();
+            return;
+        }
+
         ToggleGroup group = new ToggleGroup();
-        for (QuestionOption option : service.getOptionsByQuestion(question.questionId())) {
+        for (QuestionOption option : options) {
             RadioButton radioButton = new RadioButton(option.optionText());
             radioButton.setToggleGroup(group);
             radioButton.setWrapText(true);
+            radioButton.setMaxWidth(Double.MAX_VALUE);
+            radioButton.getStyleClass().add("attempt-option");
             radioButton.setUserData(option.optionId());
             radioButton.setOnAction(event -> {
                 Integer selectedOptionId = (Integer) radioButton.getUserData();

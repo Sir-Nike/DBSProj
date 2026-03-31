@@ -52,7 +52,15 @@ public class TeacherAddQuestionController extends BaseController {
         correct3.setUserData(3);
         correct4.setUserData(4);
 
-        subjectCombo.setItems(FXCollections.observableArrayList(loadTeacherSubjects()));
+        try {
+            subjectCombo.setItems(FXCollections.observableArrayList(loadTeacherSubjects()));
+        } catch (RuntimeException ex) {
+            subjectCombo.setItems(FXCollections.emptyObservableList());
+            showError("Load Failed", ex.getMessage());
+        }
+        subjectCombo.setPromptText("Select a subject");
+        quizCombo.setPromptText("Select a quiz");
+        quizCombo.setDisable(true);
         subjectCombo.setOnAction(event -> refreshQuizzesForSelectedSubject());
         refreshQuizzesForSelectedSubject();
     }
@@ -95,15 +103,18 @@ public class TeacherAddQuestionController extends BaseController {
                 return;
             }
 
-            Integer questionId = service.addQuestion(
-                    quiz.quizId(),
-                    questionText,
-                    marks,
-                    service.getQuestionsByQuiz(quiz.quizId()).size() + 1);
-
-            int correctIndex = (Integer) correctGroup.getSelectedToggle().getUserData();
-            for (int i = 0; i < options.size(); i++) {
-                service.addOption(questionId, options.get(i), i + 1 == correctIndex ? "Y" : "N", i + 1);
+            try {
+                int correctIndex = (Integer) correctGroup.getSelectedToggle().getUserData();
+                service.addQuestionWithOptions(
+                        quiz.quizId(),
+                        questionText,
+                        marks,
+                        service.getQuestionsByQuiz(quiz.quizId()).size() + 1,
+                        options,
+                        correctIndex);
+            } catch (RuntimeException ex) {
+                showError("Save Failed", ex.getMessage());
+                return;
             }
 
             showInfo("Question Added", "Question added successfully.");
@@ -132,23 +143,37 @@ public class TeacherAddQuestionController extends BaseController {
         Subject subject = subjectCombo.getValue();
         if (subject == null) {
             quizCombo.setItems(FXCollections.emptyObservableList());
+            quizCombo.setDisable(true);
+            quizCombo.setPromptText("Select a subject first");
             return;
         }
 
         Teacher teacher = AppSession.getLoggedInTeacher();
         List<Quiz> quizzes = new ArrayList<>();
-        for (Quiz quiz : service.getQuizzesBySubject(subject.subjectId())) {
-            if (teacher != null && teacher.teacherId().equals(quiz.createdBy())) {
-                quizzes.add(quiz);
+        try {
+            for (Quiz quiz : service.getQuizzesBySubject(subject.subjectId())) {
+                if (teacher != null && teacher.teacherId().equals(quiz.createdBy())) {
+                    quizzes.add(quiz);
+                }
             }
+        } catch (RuntimeException ex) {
+            quizCombo.setItems(FXCollections.emptyObservableList());
+            quizCombo.setDisable(true);
+            quizCombo.setPromptText("Unable to load quizzes");
+            showError("Load Failed", ex.getMessage());
+            return;
         }
         quizzes.sort(Comparator.comparing(Quiz::quizTitle));
         quizCombo.setItems(FXCollections.observableArrayList(quizzes));
+        quizCombo.setDisable(quizzes.isEmpty());
+        quizCombo.setPromptText(quizzes.isEmpty() ? "No quizzes for this subject" : "Select a quiz");
     }
 
     private void clearForm() {
         subjectCombo.setValue(null);
         quizCombo.setItems(FXCollections.emptyObservableList());
+        quizCombo.setDisable(true);
+        quizCombo.setPromptText("Select a subject first");
         questionTextArea.clear();
         marksField.clear();
         option1Field.clear();

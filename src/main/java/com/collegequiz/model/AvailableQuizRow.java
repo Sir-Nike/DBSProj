@@ -15,6 +15,6 @@ public record AvailableQuizRow(
 ) {
     @Override
     public String toString() {
-        return quizId + " - " + quizTitle;
+        return quizDate == null ? quizTitle : quizTitle + " \u2022 " + quizDate.toLocalDate();
     }
 }

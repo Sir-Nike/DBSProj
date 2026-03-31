@@ -841,9 +841,19 @@ CREATE OR REPLACE PACKAGE BODY PKG_QUIZ_ADMIN AS
               FROM QUESTION
              WHERE QUIZ_ID = P_QUIZ_ID;
 
+        V_QUESTION_COUNT NUMBER := 0;
         V_OPTION_COUNT  NUMBER;
         V_CORRECT_COUNT NUMBER;
     BEGIN
+        SELECT COUNT(*)
+          INTO V_QUESTION_COUNT
+          FROM QUESTION
+         WHERE QUIZ_ID = P_QUIZ_ID;
+
+        IF V_QUESTION_COUNT = 0 THEN
+            RAISE_APPLICATION_ERROR(-20200, 'A quiz must contain at least one question before publishing.');
+        END IF;
+
         FOR R IN C_Q LOOP
             SELECT COUNT(*),
                    SUM(CASE WHEN IS_CORRECT = 'Y' THEN 1 ELSE 0 END)
@@ -851,8 +861,8 @@ CREATE OR REPLACE PACKAGE BODY PKG_QUIZ_ADMIN AS
               FROM QUESTION_OPTION
              WHERE QUESTION_ID = R.QUESTION_ID;
 
-            IF V_OPTION_COUNT < 2 THEN
-                RAISE_APPLICATION_ERROR(-20201, 'Each question must have at least two options before publishing.');
+            IF V_OPTION_COUNT <> 4 THEN
+                RAISE_APPLICATION_ERROR(-20201, 'Each question must have exactly four options before publishing.');
             END IF;
 
             IF NVL(V_CORRECT_COUNT, 0) <> 1 THEN

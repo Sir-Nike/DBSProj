@@ -23,10 +23,15 @@ public class TeacherCreateSubjectController extends BaseController {
 
         Teacher teacher = AppSession.getLoggedInTeacher();
         teacherLabel.setText(teacher.teacherCode() + " · " + teacher.name());
-        Department department = service.getDepartments().stream()
-                .filter(item -> item.departmentId().equals(teacher.departmentId()))
-                .findFirst()
-                .orElse(null);
+        Department department = null;
+        try {
+            department = service.getDepartments().stream()
+                    .filter(item -> item.departmentId().equals(teacher.departmentId()))
+                    .findFirst()
+                    .orElse(null);
+        } catch (RuntimeException ex) {
+            department = null;
+        }
         departmentLabel.setText(department == null ? "Department #" + teacher.departmentId() : department.departmentName());
     }
 
@@ -55,12 +60,17 @@ public class TeacherCreateSubjectController extends BaseController {
                 return;
             }
 
-            service.createSubject(
-                    subjectName,
-                    subjectCode,
-                    semester,
-                    teacher.departmentId());
-            showInfo("Subject Created", "Subject created successfully.");
+            try {
+                service.createSubject(
+                        subjectName,
+                        subjectCode,
+                        semester,
+                        teacher.departmentId());
+                showInfo("Subject Created", "Subject created successfully.");
+            } catch (RuntimeException ex) {
+                showError("Create Failed", ex.getMessage());
+                return;
+            }
             subjectNameField.clear();
             subjectCodeField.clear();
             semesterField.clear();

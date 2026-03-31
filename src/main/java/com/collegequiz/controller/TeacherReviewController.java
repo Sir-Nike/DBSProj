@@ -17,6 +17,9 @@ public class TeacherReviewController extends BaseController {
     @FXML private TableColumn<TeacherDashboardRow, Number> attemptsColumn;
     @FXML private TableColumn<TeacherDashboardRow, Number> marksColumn;
     @FXML private TableColumn<TeacherDashboardRow, String> publishedColumn;
+    @FXML private Label totalQuizzesLabel;
+    @FXML private Label publishedQuizzesLabel;
+    @FXML private Label draftQuizzesLabel;
 
     @FXML
     private void initialize() {
@@ -35,6 +38,7 @@ public class TeacherReviewController extends BaseController {
         marksColumn.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().totalMarks()));
         publishedColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().resultsPublished()));
 
+        dashboardTable.setPlaceholder(new Label("No quizzes are available for publishing yet."));
         refreshTable();
     }
 
@@ -50,8 +54,12 @@ public class TeacherReviewController extends BaseController {
             showError("Select Quiz", "Choose a quiz first.");
             return;
         }
-        service.publishResults(row.quizId(), AppSession.getLoggedInTeacherId());
-        refreshTable();
+        try {
+            service.publishResults(row.quizId(), AppSession.getLoggedInTeacherId());
+            refreshTable();
+        } catch (RuntimeException ex) {
+            showError("Publish Failed", ex.getMessage());
+        }
     }
 
     @FXML
@@ -61,8 +69,12 @@ public class TeacherReviewController extends BaseController {
             showError("Select Quiz", "Choose a quiz first.");
             return;
         }
-        service.unpublishResults(row.quizId(), AppSession.getLoggedInTeacherId());
-        refreshTable();
+        try {
+            service.unpublishResults(row.quizId(), AppSession.getLoggedInTeacherId());
+            refreshTable();
+        } catch (RuntimeException ex) {
+            showError("Unpublish Failed", ex.getMessage());
+        }
     }
 
     @FXML
@@ -71,7 +83,24 @@ public class TeacherReviewController extends BaseController {
     }
 
     private void refreshTable() {
-        dashboardTable.setItems(FXCollections.observableArrayList(
-                service.getTeacherDashboard(AppSession.getLoggedInTeacherId())));
+        try {
+            var rows = service.getTeacherDashboard(AppSession.getLoggedInTeacherId());
+            int published = 0;
+            for (TeacherDashboardRow row : rows) {
+                if ("Y".equalsIgnoreCase(row.resultsPublished())) {
+                    published++;
+                }
+            }
+            dashboardTable.setItems(FXCollections.observableArrayList(rows));
+            totalQuizzesLabel.setText(String.valueOf(rows.size()));
+            publishedQuizzesLabel.setText(String.valueOf(published));
+            draftQuizzesLabel.setText(String.valueOf(Math.max(0, rows.size() - published)));
+        } catch (RuntimeException ex) {
+            dashboardTable.setItems(FXCollections.emptyObservableList());
+            totalQuizzesLabel.setText("0");
+            publishedQuizzesLabel.setText("0");
+            draftQuizzesLabel.setText("0");
+            showError("Load Failed", ex.getMessage());
+        }
     }
 }

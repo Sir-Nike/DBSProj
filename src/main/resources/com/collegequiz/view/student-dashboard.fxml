@@ -27,13 +27,16 @@
         <VBox spacing="16" styleClass="dashboard-layout">
             <HBox spacing="12" styleClass="summary-strip">
                 <VBox spacing="4" styleClass="stat-card" HBox.hgrow="ALWAYS">
+                    <Label text="Department" styleClass="stat-label"/>
                     <Label fx:id="departmentLabel" text="Department" styleClass="stat-value"/>
                 </VBox>
                 <VBox spacing="4" styleClass="stat-card" HBox.hgrow="ALWAYS">
-                    <Label text="Quizzes" styleClass="stat-value"/>
+                    <Label text="Available Quizzes" styleClass="stat-label"/>
+                    <Label fx:id="availableCountLabel" text="0" styleClass="stat-value"/>
                 </VBox>
                 <VBox spacing="4" styleClass="stat-card" HBox.hgrow="ALWAYS">
-                    <Label text="Results" styleClass="stat-value"/>
+                    <Label text="Published Results" styleClass="stat-label"/>
+                    <Label fx:id="resultCountLabel" text="0" styleClass="stat-value"/>
                 </VBox>
             </HBox>
             <HBox spacing="16" VBox.vgrow="ALWAYS">
@@ -41,7 +44,6 @@
                     <Label text="Available Quizzes" styleClass="section-title"/>
                     <TableView fx:id="quizTable" prefHeight="320" VBox.vgrow="ALWAYS">
                         <columns>
-                            <TableColumn fx:id="quizIdColumn" text="Quiz ID" prefWidth="90"/>
                             <TableColumn fx:id="quizTitleColumn" text="Title" prefWidth="260"/>
                             <TableColumn fx:id="subjectColumn" text="Subject" prefWidth="240"/>
                             <TableColumn fx:id="durationColumn" text="Minutes" prefWidth="90"/>
@@ -54,7 +56,6 @@
                     <Label text="Published Results" styleClass="section-title"/>
                     <TableView fx:id="resultTable" prefHeight="320" VBox.vgrow="ALWAYS">
                         <columns>
-                            <TableColumn fx:id="resultQuizIdColumn" text="Quiz ID" prefWidth="90"/>
                             <TableColumn fx:id="resultQuizTitleColumn" text="Quiz Title" prefWidth="280"/>
                             <TableColumn fx:id="resultScoreColumn" text="Score" prefWidth="100"/>
                             <TableColumn fx:id="resultPercentColumn" text="Percent" prefWidth="100"/>

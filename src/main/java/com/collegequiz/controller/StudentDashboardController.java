@@ -1,6 +1,7 @@
 package com.collegequiz.controller;
 
 import com.collegequiz.model.AvailableQuizRow;
+import com.collegequiz.model.Department;
 import com.collegequiz.model.Student;
 import com.collegequiz.model.StudentResultRow;
 import com.collegequiz.model.Subject;
@@ -25,9 +26,11 @@ public class StudentDashboardController extends BaseController {
     @FXML
     private Label departmentLabel;
     @FXML
-    private TableView<AvailableQuizRow> quizTable;
+    private Label availableCountLabel;
     @FXML
-    private TableColumn<AvailableQuizRow, Number> quizIdColumn;
+    private Label resultCountLabel;
+    @FXML
+    private TableView<AvailableQuizRow> quizTable;
     @FXML
     private TableColumn<AvailableQuizRow, String> quizTitleColumn;
     @FXML
@@ -40,8 +43,6 @@ public class StudentDashboardController extends BaseController {
     private TableColumn<AvailableQuizRow, String> publishedColumn;
     @FXML
     private TableView<StudentResultRow> resultTable;
-    @FXML
-    private TableColumn<StudentResultRow, Number> resultQuizIdColumn;
     @FXML
     private TableColumn<StudentResultRow, String> resultQuizTitleColumn;
     @FXML
@@ -62,22 +63,28 @@ public class StudentDashboardController extends BaseController {
 
         studentNameLabel.setText(student.name());
         registrationLabel.setText(student.registrationNo());
-        departmentLabel.setText("Dept " + student.departmentId());
+        Department department = service.getDepartments().stream()
+                .filter(item -> item.departmentId().equals(student.departmentId()))
+                .findFirst()
+                .orElse(null);
+        departmentLabel.setText(department == null
+                ? "Department #" + student.departmentId()
+                : department.departmentName());
 
-        quizIdColumn.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().quizId()));
         quizTitleColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().quizTitle()));
         subjectColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().subjectCode() + " - " + data.getValue().subjectName()));
         durationColumn.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().durationMinutes()));
         marksColumn.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().totalMarks()));
         publishedColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().resultsPublished()));
 
-        resultQuizIdColumn.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().quizId()));
         resultQuizTitleColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().quizTitle()));
         resultScoreColumn.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().totalScore()));
         resultPercentColumn.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().percentage()));
         resultTimeColumn.setCellValueFactory(data -> new SimpleStringProperty(
                 data.getValue().submissionTime() == null ? "-" : data.getValue().submissionTime().toString()));
 
+        quizTable.setPlaceholder(new Label("No quizzes available right now."));
+        resultTable.setPlaceholder(new Label("No published results yet."));
         refreshTables();
     }
 
@@ -94,10 +101,14 @@ public class StudentDashboardController extends BaseController {
             return;
         }
 
-        Integer attemptId = service.startAttempt(selected.quizId(), AppSession.getLoggedInStudentId());
-        QuizRuntimeContext.setQuizId(selected.quizId());
-        QuizRuntimeContext.setAttemptId(attemptId);
-        AppNavigator.showQuizAttempt();
+        try {
+            Integer attemptId = service.startAttempt(selected.quizId(), AppSession.getLoggedInStudentId());
+            QuizRuntimeContext.setQuizId(selected.quizId());
+            QuizRuntimeContext.setAttemptId(attemptId);
+            AppNavigator.showQuizAttempt();
+        } catch (RuntimeException ex) {
+            showError("Start Failed", ex.getMessage());
+        }
     }
 
     @FXML
@@ -110,29 +121,39 @@ public class StudentDashboardController extends BaseController {
     private void refreshTables() {
         Student student = AppSession.getLoggedInStudent();
         List<AvailableQuizRow> availableQuizzes = new ArrayList<>();
-        List<Subject> subjects = service.getSubjectsByDepartment(student.departmentId());
-        for (Subject subject : subjects) {
-            List<Quiz> quizzes = service.getQuizzesBySubject(subject.subjectId());
-            for (Quiz quiz : quizzes) {
-                String attemptStatus = service.getAttemptStatus(quiz.quizId(), student.studentId());
-                if ("SUBMITTED".equals(attemptStatus) || "AUTO_SUBMITTED".equals(attemptStatus)) {
-                    continue;
+        try {
+            List<Subject> subjects = service.getSubjectsByDepartment(student.departmentId());
+            for (Subject subject : subjects) {
+                List<Quiz> quizzes = service.getQuizzesBySubject(subject.subjectId());
+                for (Quiz quiz : quizzes) {
+                    String attemptStatus = service.getAttemptStatus(quiz.quizId(), student.studentId());
+                    if ("SUBMITTED".equals(attemptStatus) || "AUTO_SUBMITTED".equals(attemptStatus)) {
+                        continue;
+                    }
+                    availableQuizzes.add(new AvailableQuizRow(
+                            quiz.quizId(),
+                            quiz.quizTitle(),
+                            subject.subjectCode(),
+                            subject.subjectName(),
+                            quiz.durationMinutes(),
+                            quiz.totalMarks(),
+                            quiz.quizDate(),
+                            quiz.resultsPublished(),
+                            subject.subjectId()
+                    ));
                 }
-                availableQuizzes.add(new AvailableQuizRow(
-                        quiz.quizId(),
-                        quiz.quizTitle(),
-                        subject.subjectCode(),
-                        subject.subjectName(),
-                        quiz.durationMinutes(),
-                        quiz.totalMarks(),
-                        quiz.quizDate(),
-                        quiz.resultsPublished(),
-                        subject.subjectId()
-                ));
             }
+            List<StudentResultRow> publishedResults = service.getPublishedResults(student.studentId());
+            availableCountLabel.setText(String.valueOf(availableQuizzes.size()));
+            resultCountLabel.setText(String.valueOf(publishedResults.size()));
+            quizTable.setItems(FXCollections.observableArrayList(availableQuizzes));
+            resultTable.setItems(FXCollections.observableArrayList(publishedResults));
+        } catch (RuntimeException ex) {
+            showError("Load Failed", ex.getMessage());
+            availableCountLabel.setText("0");
+            resultCountLabel.setText("0");
+            quizTable.setItems(FXCollections.emptyObservableList());
+            resultTable.setItems(FXCollections.emptyObservableList());
         }
-
-        quizTable.setItems(FXCollections.observableArrayList(availableQuizzes));
-        resultTable.setItems(FXCollections.observableArrayList(service.getPublishedResults(student.studentId())));
     }
 }

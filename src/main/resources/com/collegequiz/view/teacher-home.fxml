@@ -28,9 +28,24 @@
                         <Label fx:id="teacherMetaLabel" text="CSE001 · Department 10" styleClass="subtitle-muted" wrapText="true"/>
                     </VBox>
 
+                    <HBox spacing="10" styleClass="summary-strip">
+                        <VBox spacing="4" styleClass="stat-card" HBox.hgrow="ALWAYS">
+                            <Label text="Subjects" styleClass="stat-label"/>
+                            <Label fx:id="subjectCountLabel" text="0" styleClass="stat-value"/>
+                        </VBox>
+                        <VBox spacing="4" styleClass="stat-card" HBox.hgrow="ALWAYS">
+                            <Label text="Quizzes" styleClass="stat-label"/>
+                            <Label fx:id="quizCountLabel" text="0" styleClass="stat-value"/>
+                        </VBox>
+                        <VBox spacing="4" styleClass="stat-card" HBox.hgrow="ALWAYS">
+                            <Label text="Attempts" styleClass="stat-label"/>
+                            <Label fx:id="attemptCountLabel" text="0" styleClass="stat-value"/>
+                        </VBox>
+                    </HBox>
+
                     <VBox spacing="10" styleClass="soft-panel">
                         <Label text="Workspace" styleClass="section-eyebrow"/>
-                        <Label text="Manage subjects, quizzes, questions, and publishing from one place." styleClass="subtitle-muted" wrapText="true"/>
+                        <Label text="Manage subjects, quizzes, questions, and publishing from one place." styleClass="workspace-copy" wrapText="true"/>
                     </VBox>
                 </VBox>
 

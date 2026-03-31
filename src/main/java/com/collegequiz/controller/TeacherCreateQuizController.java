@@ -32,8 +32,14 @@ public class TeacherCreateQuizController extends BaseController {
             return;
         }
 
-        teacherLabel.setText(teacher.teacherCode());
-        subjectCombo.setItems(FXCollections.observableArrayList(loadTeacherSubjects()));
+        teacherLabel.setText(teacher.teacherCode() + " · " + teacher.name());
+        try {
+            subjectCombo.setItems(FXCollections.observableArrayList(loadTeacherSubjects()));
+        } catch (RuntimeException ex) {
+            subjectCombo.setItems(FXCollections.emptyObservableList());
+            showError("Load Failed", ex.getMessage());
+        }
+        subjectCombo.setPromptText("Select a subject");
     }
 
     @FXML
@@ -59,13 +65,18 @@ public class TeacherCreateQuizController extends BaseController {
             }
             LocalDate date = quizDatePicker.getValue() == null ? LocalDate.now() : quizDatePicker.getValue();
             LocalDateTime quizDate = date.atTime(LocalTime.of(10, 0));
-            service.createQuiz(
-                    title,
-                    duration,
-                    quizDate,
-                    subject.subjectId(),
-                    AppSession.getLoggedInTeacherId());
-            showInfo("Quiz Created", "Quiz created successfully.");
+            try {
+                service.createQuiz(
+                        title,
+                        duration,
+                        quizDate,
+                        subject.subjectId(),
+                        AppSession.getLoggedInTeacherId());
+                showInfo("Quiz Created", "Quiz created successfully.");
+            } catch (RuntimeException ex) {
+                showError("Create Failed", ex.getMessage());
+                return;
+            }
             quizTitleField.clear();
             durationField.clear();
             quizDatePicker.setValue(null);

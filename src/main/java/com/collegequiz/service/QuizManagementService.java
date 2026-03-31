@@ -23,6 +23,9 @@ public interface QuizManagementService {
 
     Integer addOption(int questionId, String optionText, String isCorrect, int displayOrder);
 
+    Integer addQuestionWithOptions(int quizId, String questionText, double marks, int displayOrder,
+                                   List<String> options, int correctIndex);
+
     Integer startAttempt(int quizId, int studentId);
 
     void autosaveAnswer(int attemptId, int questionId, int selectedOptionId);

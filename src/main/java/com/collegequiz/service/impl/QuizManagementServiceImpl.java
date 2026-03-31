@@ -72,6 +72,18 @@ public class QuizManagementServiceImpl implements QuizManagementService {
     }
 
     @Override
+    public Integer addQuestionWithOptions(int quizId, String questionText, double marks, int displayOrder,
+                                          List<String> options, int correctIndex) {
+        return inTransaction(connection -> {
+            Integer questionId = dao.addQuestion(connection, quizId, questionText, marks, displayOrder);
+            for (int i = 0; i < options.size(); i++) {
+                dao.addOption(connection, questionId, options.get(i), i + 1 == correctIndex ? "Y" : "N", i + 1);
+            }
+            return questionId;
+        });
+    }
+
+    @Override
     public Integer startAttempt(int quizId, int studentId) {
         return inTransaction(connection -> dao.startAttempt(connection, quizId, studentId));
     }

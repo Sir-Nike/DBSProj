@@ -27,6 +27,20 @@
                 <Button text="Publish Selected" onAction="#handlePublish" styleClass="dashboard-action"/>
                 <Button text="Unpublish Selected" onAction="#handleUnpublish" styleClass="dashboard-action danger"/>
             </HBox>
+            <HBox spacing="12" styleClass="summary-strip">
+                <VBox spacing="4" styleClass="stat-card" HBox.hgrow="ALWAYS">
+                    <Label text="Total Quizzes" styleClass="stat-label"/>
+                    <Label fx:id="totalQuizzesLabel" text="0" styleClass="stat-value"/>
+                </VBox>
+                <VBox spacing="4" styleClass="stat-card" HBox.hgrow="ALWAYS">
+                    <Label text="Published" styleClass="stat-label"/>
+                    <Label fx:id="publishedQuizzesLabel" text="0" styleClass="stat-value"/>
+                </VBox>
+                <VBox spacing="4" styleClass="stat-card" HBox.hgrow="ALWAYS">
+                    <Label text="Drafts" styleClass="stat-label"/>
+                    <Label fx:id="draftQuizzesLabel" text="0" styleClass="stat-value"/>
+                </VBox>
+            </HBox>
             <VBox spacing="10" styleClass="panel-card">
                 <Label text="Teacher dashboard" styleClass="section-title"/>
                 <Label text="Publish results only when they are ready for students." styleClass="subtitle-muted"/>
