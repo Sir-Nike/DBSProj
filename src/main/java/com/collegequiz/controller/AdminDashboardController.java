@@ -136,7 +136,7 @@ public class AdminDashboardController extends BaseController {
 
     @FXML
     private void handleDeleteTeacher() {
-        Teacher selected = teacherTable.getSelectionModel().getSelectedItem();
+        Teacher selected = teacherListView.getSelectionModel().getSelectedItem();
         if (selected == null) {
             showError("Select Teacher", "Choose a teacher first.");
             return;
@@ -155,7 +155,7 @@ public class AdminDashboardController extends BaseController {
 
     @FXML
     private void handleDeleteStudent() {
-        Student selected = studentTable.getSelectionModel().getSelectedItem();
+        Student selected = studentListView.getSelectionModel().getSelectedItem();
         if (selected == null) {
             showError("Select Student", "Choose a student first.");
             return;
