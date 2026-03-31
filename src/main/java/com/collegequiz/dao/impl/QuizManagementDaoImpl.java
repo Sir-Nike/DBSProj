@@ -37,6 +37,23 @@ public class QuizManagementDaoImpl implements QuizManagementDao {
     }
 
     @Override
+    public Integer createDepartment(Connection connection, String departmentCode, String departmentName)
+            throws SQLException {
+        int departmentId = nextSequenceValue(connection, "SEQ_DEPARTMENT");
+        String sql = """
+                INSERT INTO DEPARTMENT (DEPARTMENT_ID, DEPARTMENT_CODE, DEPARTMENT_NAME)
+                VALUES (?, UPPER(TRIM(?)), ?)
+                """;
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, departmentId);
+            ps.setString(2, departmentCode);
+            ps.setString(3, departmentName);
+            ps.executeUpdate();
+        }
+        return departmentId;
+    }
+
+    @Override
     public Integer createQuiz(Connection connection, String quizTitle, int durationMinutes, LocalDateTime quizDate,
                               int subjectId, int createdBy) throws SQLException {
         try (CallableStatement cs = connection.prepareCall("{ call PKG_QUIZ_ADMIN.CREATE_QUIZ(?,?,?,?,?,?) }")) {
@@ -49,6 +66,43 @@ public class QuizManagementDaoImpl implements QuizManagementDao {
             cs.execute();
             return cs.getInt(6);
         }
+    }
+
+    @Override
+    public Integer createTeacher(Connection connection, String name, String password, int departmentId)
+            throws SQLException {
+        int teacherId = nextSequenceValue(connection, "SEQ_TEACHER");
+        String sql = """
+                INSERT INTO TEACHER (TEACHER_ID, NAME, PASSWORD, DEPARTMENT_ID)
+                VALUES (?, ?, ?, ?)
+                """;
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, teacherId);
+            ps.setString(2, name);
+            ps.setString(3, password);
+            ps.setInt(4, departmentId);
+            ps.executeUpdate();
+        }
+        return teacherId;
+    }
+
+    @Override
+    public Integer createStudent(Connection connection, String registrationNo, String name, String password,
+                                 int departmentId) throws SQLException {
+        int studentId = nextSequenceValue(connection, "SEQ_STUDENT");
+        String sql = """
+                INSERT INTO STUDENT (STUDENT_ID, REGISTRATION_NO, NAME, PASSWORD, DEPARTMENT_ID)
+                VALUES (?, ?, ?, ?, ?)
+                """;
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, studentId);
+            ps.setString(2, registrationNo);
+            ps.setString(3, name);
+            ps.setString(4, password);
+            ps.setInt(5, departmentId);
+            ps.executeUpdate();
+        }
+        return studentId;
     }
 
     @Override
@@ -147,6 +201,133 @@ public class QuizManagementDaoImpl implements QuizManagementDao {
     }
 
     @Override
+    public void removeQuiz(Connection connection, int quizId, int teacherId) throws SQLException {
+        try (PreparedStatement ps = connection.prepareStatement(
+                "SELECT CREATED_BY FROM QUIZ WHERE QUIZ_ID = ? FOR UPDATE")) {
+            ps.setInt(1, quizId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (!rs.next()) {
+                    throw new SQLException("Quiz not found.");
+                }
+                if (rs.getInt(1) != teacherId) {
+                    throw new SQLException("Only the quiz creator can delete this quiz.");
+                }
+            }
+        }
+
+        setAdminCleanupMode(connection, true);
+        try {
+            deleteQuizGraph(connection, quizId);
+        } finally {
+            setAdminCleanupMode(connection, false);
+        }
+    }
+
+    @Override
+    public void removeTeacher(Connection connection, int teacherId) throws SQLException {
+        setAdminCleanupMode(connection, true);
+        try {
+            try (PreparedStatement ps = connection.prepareStatement(
+                    "DELETE FROM RESULT_PUBLISH_LOG WHERE PUBLISHED_BY = ?")) {
+                ps.setInt(1, teacherId);
+                ps.executeUpdate();
+            }
+
+            List<Integer> quizIds = new ArrayList<>();
+            try (PreparedStatement ps = connection.prepareStatement(
+                    "SELECT QUIZ_ID FROM QUIZ WHERE CREATED_BY = ?")) {
+                ps.setInt(1, teacherId);
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        quizIds.add(rs.getInt(1));
+                    }
+                }
+            }
+
+            for (Integer quizId : quizIds) {
+                deleteQuizGraph(connection, quizId);
+            }
+
+            try (PreparedStatement ps = connection.prepareStatement("DELETE FROM TEACHER WHERE TEACHER_ID = ?")) {
+                ps.setInt(1, teacherId);
+                ps.executeUpdate();
+            }
+        } finally {
+            setAdminCleanupMode(connection, false);
+        }
+    }
+
+    @Override
+    public void removeStudent(Connection connection, int studentId) throws SQLException {
+        setAdminCleanupMode(connection, true);
+        try {
+            try (PreparedStatement ps = connection.prepareStatement(
+                    "DELETE FROM ANSWER_AUTOSAVE_LOG WHERE ATTEMPT_ID IN (SELECT ATTEMPT_ID FROM QUIZ_ATTEMPT WHERE STUDENT_ID = ?)")) {
+                ps.setInt(1, studentId);
+                ps.executeUpdate();
+            }
+            try (PreparedStatement ps = connection.prepareStatement(
+                    "DELETE FROM STUDENT_ANSWER WHERE ATTEMPT_ID IN (SELECT ATTEMPT_ID FROM QUIZ_ATTEMPT WHERE STUDENT_ID = ?)")) {
+                ps.setInt(1, studentId);
+                ps.executeUpdate();
+            }
+            try (PreparedStatement ps = connection.prepareStatement(
+                    "DELETE FROM QUIZ_ATTEMPT WHERE STUDENT_ID = ?")) {
+                ps.setInt(1, studentId);
+                ps.executeUpdate();
+            }
+            try (PreparedStatement ps = connection.prepareStatement("DELETE FROM STUDENT WHERE STUDENT_ID = ?")) {
+                ps.setInt(1, studentId);
+                ps.executeUpdate();
+            }
+        } finally {
+            setAdminCleanupMode(connection, false);
+        }
+    }
+
+    @Override
+    public void clearAllOperationalData(Connection connection) throws SQLException {
+        setAdminCleanupMode(connection, true);
+        try {
+            try (PreparedStatement ps = connection.prepareStatement("DELETE FROM ANSWER_AUTOSAVE_LOG")) {
+                ps.executeUpdate();
+            }
+            try (PreparedStatement ps = connection.prepareStatement("DELETE FROM RESULT_PUBLISH_LOG")) {
+                ps.executeUpdate();
+            }
+            try (PreparedStatement ps = connection.prepareStatement("DELETE FROM STUDENT_ANSWER")) {
+                ps.executeUpdate();
+            }
+            try (PreparedStatement ps = connection.prepareStatement("DELETE FROM QUIZ_ATTEMPT")) {
+                ps.executeUpdate();
+            }
+            try (PreparedStatement ps = connection.prepareStatement("DELETE FROM QUESTION_OPTION")) {
+                ps.executeUpdate();
+            }
+            try (PreparedStatement ps = connection.prepareStatement("DELETE FROM QUESTION")) {
+                ps.executeUpdate();
+            }
+            try (PreparedStatement ps = connection.prepareStatement("DELETE FROM QUIZ")) {
+                ps.executeUpdate();
+            }
+            try (PreparedStatement ps = connection.prepareStatement("DELETE FROM SUBJECT")) {
+                ps.executeUpdate();
+            }
+            try (PreparedStatement ps = connection.prepareStatement("DELETE FROM TEACHER")) {
+                ps.executeUpdate();
+            }
+            try (PreparedStatement ps = connection.prepareStatement("DELETE FROM STUDENT")) {
+                ps.executeUpdate();
+            }
+            try (PreparedStatement ps = connection.prepareStatement("DELETE FROM DEPARTMENT")) {
+                ps.executeUpdate();
+            }
+        } finally {
+            setAdminCleanupMode(connection, false);
+        }
+    }
+
+    @Override
     public List<TeacherDashboardRow> fetchTeacherDashboard(Connection connection, int teacherId) throws SQLException {
         String sql = """
                 SELECT TEACHER_ID, TEACHER_NAME, DEPARTMENT_NAME, SUBJECT_ID, SUBJECT_CODE, SUBJECT_NAME,
@@ -232,6 +413,48 @@ public class QuizManagementDaoImpl implements QuizManagementDao {
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 rows.add(new Department(rs.getInt("DEPARTMENT_ID"), rs.getString("DEPARTMENT_NAME")));
+            }
+        }
+        return rows;
+    }
+
+    @Override
+    public List<Teacher> fetchAllTeachers(Connection connection) throws SQLException {
+        String sql = """
+                SELECT TEACHER_ID, TEACHER_CODE, NAME, DEPARTMENT_ID
+                  FROM TEACHER
+                 ORDER BY NAME
+                """;
+        List<Teacher> rows = new ArrayList<>();
+        try (PreparedStatement ps = connection.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                rows.add(new Teacher(
+                        rs.getInt("TEACHER_ID"),
+                        rs.getString("TEACHER_CODE"),
+                        rs.getString("NAME"),
+                        rs.getInt("DEPARTMENT_ID")));
+            }
+        }
+        return rows;
+    }
+
+    @Override
+    public List<Student> fetchAllStudents(Connection connection) throws SQLException {
+        String sql = """
+                SELECT STUDENT_ID, REGISTRATION_NO, NAME, DEPARTMENT_ID
+                  FROM STUDENT
+                 ORDER BY NAME
+                """;
+        List<Student> rows = new ArrayList<>();
+        try (PreparedStatement ps = connection.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                rows.add(new Student(
+                        rs.getInt("STUDENT_ID"),
+                        rs.getString("REGISTRATION_NO"),
+                        rs.getString("NAME"),
+                        rs.getInt("DEPARTMENT_ID")));
             }
         }
         return rows;
@@ -546,5 +769,60 @@ public class QuizManagementDaoImpl implements QuizManagementDao {
             }
         }
         return null;
+    }
+
+    private void setAdminCleanupMode(Connection connection, boolean enabled) throws SQLException {
+        try (CallableStatement cs = connection.prepareCall("{ call PKG_QUIZ_ADMIN.SET_ADMIN_CLEANUP_MODE(?) }")) {
+            cs.setInt(1, enabled ? 1 : 0);
+            cs.execute();
+        }
+    }
+
+    private int nextSequenceValue(Connection connection, String sequenceName) throws SQLException {
+        try (PreparedStatement ps = connection.prepareStatement("SELECT " + sequenceName + ".NEXTVAL FROM DUAL");
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        }
+        throw new SQLException("Unable to fetch next value for sequence " + sequenceName);
+    }
+
+    private void deleteQuizGraph(Connection connection, int quizId) throws SQLException {
+        try (PreparedStatement ps = connection.prepareStatement(
+                "DELETE FROM ANSWER_AUTOSAVE_LOG WHERE ATTEMPT_ID IN (SELECT ATTEMPT_ID FROM QUIZ_ATTEMPT WHERE QUIZ_ID = ?)")) {
+            ps.setInt(1, quizId);
+            ps.executeUpdate();
+        }
+        try (PreparedStatement ps = connection.prepareStatement(
+                "DELETE FROM STUDENT_ANSWER WHERE ATTEMPT_ID IN (SELECT ATTEMPT_ID FROM QUIZ_ATTEMPT WHERE QUIZ_ID = ?)")) {
+            ps.setInt(1, quizId);
+            ps.executeUpdate();
+        }
+        try (PreparedStatement ps = connection.prepareStatement(
+                "DELETE FROM QUIZ_ATTEMPT WHERE QUIZ_ID = ?")) {
+            ps.setInt(1, quizId);
+            ps.executeUpdate();
+        }
+        try (PreparedStatement ps = connection.prepareStatement(
+                "DELETE FROM QUESTION_OPTION WHERE QUESTION_ID IN (SELECT QUESTION_ID FROM QUESTION WHERE QUIZ_ID = ?)")) {
+            ps.setInt(1, quizId);
+            ps.executeUpdate();
+        }
+        try (PreparedStatement ps = connection.prepareStatement(
+                "DELETE FROM QUESTION WHERE QUIZ_ID = ?")) {
+            ps.setInt(1, quizId);
+            ps.executeUpdate();
+        }
+        try (PreparedStatement ps = connection.prepareStatement(
+                "DELETE FROM RESULT_PUBLISH_LOG WHERE QUIZ_ID = ?")) {
+            ps.setInt(1, quizId);
+            ps.executeUpdate();
+        }
+        try (PreparedStatement ps = connection.prepareStatement(
+                "DELETE FROM QUIZ WHERE QUIZ_ID = ?")) {
+            ps.setInt(1, quizId);
+            ps.executeUpdate();
+        }
     }
 }

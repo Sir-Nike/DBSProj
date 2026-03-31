@@ -36,8 +36,8 @@
 }
 
 .auth-shell {
-    -fx-pref-width: 920;
-    -fx-max-width: 980;
+    -fx-pref-width: 1080;
+    -fx-max-width: 1100;
 }
 
 .auth-hero {
@@ -61,6 +61,10 @@
 
 .role-grid {
     -fx-padding: 2 0 0 0;
+}
+
+.role-card {
+    -fx-min-width: 260;
 }
 
 .dashboard-header {
@@ -117,17 +121,17 @@
 .card,
 .question-card {
     -fx-background-color: white;
-    -fx-background-radius: 20;
-    -fx-padding: 20;
+    -fx-background-radius: 18;
+    -fx-padding: 18;
     -fx-border-color: #dbe4ef;
-    -fx-border-radius: 20;
+    -fx-border-radius: 18;
     -fx-border-width: 1;
-    -fx-effect: dropshadow(gaussian, rgba(17, 27, 47, 0.08), 20, 0.18, 0, 6);
+    -fx-effect: dropshadow(gaussian, rgba(17, 27, 47, 0.06), 12, 0.14, 0, 4);
 }
 
 .choice-card {
     -fx-alignment: center-left;
-    -fx-padding: 18 18 18 18;
+    -fx-padding: 16;
 }
 
 .title-xxl {
@@ -296,9 +300,9 @@
 
 .question-card {
     -fx-background-color: white;
-    -fx-background-radius: 14;
+    -fx-background-radius: 16;
     -fx-border-color: #dbe4ef;
-    -fx-border-radius: 14;
+    -fx-border-radius: 16;
     -fx-border-width: 1;
     -fx-padding: 16;
 }

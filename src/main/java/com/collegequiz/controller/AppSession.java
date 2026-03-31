@@ -8,6 +8,7 @@ public final class AppSession {
     private static Integer loggedInStudentId;
     private static String loggedInRole;
     private static Student loggedInStudent;
+    private static String loggedInAdminUsername;
 
     private AppSession() {
     }
@@ -31,6 +32,15 @@ public final class AppSession {
         loggedInTeacher = null;
         loggedInRole = "STUDENT";
         loggedInStudent = student;
+        loggedInAdminUsername = null;
+    }
+
+    public static void setAdminSession(String username) {
+        loggedInTeacher = null;
+        loggedInStudentId = null;
+        loggedInStudent = null;
+        loggedInRole = "ADMIN";
+        loggedInAdminUsername = username;
     }
 
     public static Integer getLoggedInTeacherId() {
@@ -53,10 +63,19 @@ public final class AppSession {
         return loggedInStudent;
     }
 
+    public static String getLoggedInAdminUsername() {
+        return loggedInAdminUsername;
+    }
+
+    public static boolean isAdmin() {
+        return "ADMIN".equals(loggedInRole);
+    }
+
     public static void clear() {
         loggedInTeacher = null;
         loggedInStudentId = null;
         loggedInRole = null;
         loggedInStudent = null;
+        loggedInAdminUsername = null;
     }
 }

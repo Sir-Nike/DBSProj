@@ -31,6 +31,8 @@ C:\Users\Shreeniketh\DBSProj\src\main\java\com\collegequiz\dao\QuizManagementDao
 C:\Users\Shreeniketh\DBSProj\src\main\java\com\collegequiz\controller\StudentLoginController.java
 C:\Users\Shreeniketh\DBSProj\src\main\java\com\collegequiz\exception\QuizException.java
 C:\Users\Shreeniketh\DBSProj\src\main\java\com\collegequiz\exception\ServiceException.java
+C:\Users\Shreeniketh\DBSProj\src\main\java\com\collegequiz\controller\AdminLoginController.java
+C:\Users\Shreeniketh\DBSProj\src\main\java\com\collegequiz\controller\AdminDashboardController.java
 C:\Users\Shreeniketh\DBSProj\src\main\java\com\collegequiz\controller\AppSession.java
 C:\Users\Shreeniketh\DBSProj\src\main\java\com\collegequiz\model\TeacherDashboardRow.java
 C:\Users\Shreeniketh\DBSProj\src\main\java\com\collegequiz\service\impl\QuizManagementServiceImpl.java

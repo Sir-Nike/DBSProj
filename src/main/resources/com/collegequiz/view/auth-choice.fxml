@@ -28,6 +28,10 @@
                         <Label text="Student" styleClass="title-lg"/>
                         <Button text="Continue as Student" onAction="#handleStudentChoice" maxWidth="Infinity" styleClass="dashboard-action"/>
                     </VBox>
+                    <VBox spacing="10" styleClass="choice-card role-card" HBox.hgrow="ALWAYS">
+                        <Label text="Admin" styleClass="title-lg"/>
+                        <Button text="Continue as Admin" onAction="#handleAdminChoice" maxWidth="Infinity" styleClass="dashboard-action"/>
+                    </VBox>
                 </HBox>
             </VBox>
         </VBox>

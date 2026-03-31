@@ -6,6 +6,6 @@ public record Department(
 ) {
     @Override
     public String toString() {
-        return departmentName + " (#" + departmentId + ")";
+        return departmentName;
     }
 }

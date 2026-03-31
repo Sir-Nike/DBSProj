@@ -110,14 +110,14 @@ Three views support the later UI and reporting layers:
 
 The script loads:
 
-- 2 departments
-- 2 teachers
-- 5 students
-- 2 subjects
-- 2 quizzes
-- 6 questions
+- 3 departments
+- 3 teachers
+- 3 students
+- 4 subjects
+- 4 quizzes
+- 20 questions
 - option rows for all questions
-- 3 sample attempts
+- 0 sample attempts
 
 This gives enough data to test quiz creation, autosave, scoring, submission, and result visibility.
 

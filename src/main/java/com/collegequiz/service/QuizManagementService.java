@@ -9,7 +9,6 @@ import com.collegequiz.model.Student;
 import com.collegequiz.model.Subject;
 import com.collegequiz.model.Teacher;
 import com.collegequiz.model.TeacherDashboardRow;
-import com.collegequiz.model.Teacher;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,7 +16,13 @@ import java.util.List;
 public interface QuizManagementService {
     Integer createSubject(String subjectName, String subjectCode, int semester, int departmentId);
 
+    Integer createDepartment(String departmentCode, String departmentName);
+
     Integer createQuiz(String quizTitle, int durationMinutes, LocalDateTime quizDate, int subjectId, int createdBy);
+
+    Integer createTeacher(String name, String password, int departmentId);
+
+    Integer createStudent(String registrationNo, String name, String password, int departmentId);
 
     Integer addQuestion(int quizId, String questionText, double marks, int displayOrder);
 
@@ -38,11 +43,23 @@ public interface QuizManagementService {
 
     void unpublishResults(int quizId, int teacherId);
 
+    void removeQuiz(int quizId, int teacherId);
+
+    void removeTeacher(int teacherId);
+
+    void removeStudent(int studentId);
+
+    void clearAllOperationalData();
+
     List<TeacherDashboardRow> getTeacherDashboard(int teacherId);
 
     List<StudentResultRow> getPublishedResults(int studentId);
 
     List<Department> getDepartments();
+
+    List<Teacher> getAllTeachers();
+
+    List<Student> getAllStudents();
 
     List<Teacher> getTeachersByDepartment(int departmentId);
 

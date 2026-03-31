@@ -105,11 +105,15 @@ public class TeacherAddQuestionController extends BaseController {
 
             try {
                 int correctIndex = (Integer) correctGroup.getSelectedToggle().getUserData();
+                int nextDisplayOrder = service.getQuestionsByQuiz(quiz.quizId()).stream()
+                        .mapToInt(question -> question.displayOrder() == null ? 0 : question.displayOrder())
+                        .max()
+                        .orElse(0) + 1;
                 service.addQuestionWithOptions(
                         quiz.quizId(),
                         questionText,
                         marks,
-                        service.getQuestionsByQuiz(quiz.quizId()).size() + 1,
+                        nextDisplayOrder,
                         options,
                         correctIndex);
             } catch (RuntimeException ex) {

@@ -21,7 +21,7 @@ public final class AppNavigator {
     }
 
     public static void showLogin() {
-        loadAndShow("/com/collegequiz/view/auth-choice.fxml", "College Quiz Management System", 1120, 720);
+        loadAndShow("/com/collegequiz/view/auth-choice.fxml", "College Quiz Management System", 1240, 760);
     }
 
     public static void showTeacherLogin() {
@@ -30,6 +30,10 @@ public final class AppNavigator {
 
     public static void showStudentLogin() {
         loadAndShow("/com/collegequiz/view/student-login.fxml", "Student Login", 1080, 680);
+    }
+
+    public static void showAdminLogin() {
+        loadAndShow("/com/collegequiz/view/admin-login.fxml", "Admin Login", 1080, 680);
     }
 
     public static void showTeacherDashboard() {
@@ -58,6 +62,10 @@ public final class AppNavigator {
 
     public static void showTeacherReview() {
         loadAndShow("/com/collegequiz/view/teacher-review.fxml", "Teacher Review", 1240, 780);
+    }
+
+    public static void showAdminDashboard() {
+        loadAndShow("/com/collegequiz/view/admin-dashboard.fxml", "Admin Console", 1440, 840);
     }
 
     private static void loadAndShow(String resourcePath, String title, double width, double height) {

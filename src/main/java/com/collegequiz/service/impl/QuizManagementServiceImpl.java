@@ -57,8 +57,23 @@ public class QuizManagementServiceImpl implements QuizManagementService {
     }
 
     @Override
+    public Integer createDepartment(String departmentCode, String departmentName) {
+        return inTransaction(connection -> dao.createDepartment(connection, departmentCode, departmentName));
+    }
+
+    @Override
     public Integer createQuiz(String quizTitle, int durationMinutes, LocalDateTime quizDate, int subjectId, int createdBy) {
         return inTransaction(connection -> dao.createQuiz(connection, quizTitle, durationMinutes, quizDate, subjectId, createdBy));
+    }
+
+    @Override
+    public Integer createTeacher(String name, String password, int departmentId) {
+        return inTransaction(connection -> dao.createTeacher(connection, name, password, departmentId));
+    }
+
+    @Override
+    public Integer createStudent(String registrationNo, String name, String password, int departmentId) {
+        return inTransaction(connection -> dao.createStudent(connection, registrationNo, name, password, departmentId));
     }
 
     @Override
@@ -126,6 +141,38 @@ public class QuizManagementServiceImpl implements QuizManagementService {
     }
 
     @Override
+    public void removeQuiz(int quizId, int teacherId) {
+        inTransaction(connection -> {
+            dao.removeQuiz(connection, quizId, teacherId);
+            return null;
+        });
+    }
+
+    @Override
+    public void removeTeacher(int teacherId) {
+        inTransaction(connection -> {
+            dao.removeTeacher(connection, teacherId);
+            return null;
+        });
+    }
+
+    @Override
+    public void removeStudent(int studentId) {
+        inTransaction(connection -> {
+            dao.removeStudent(connection, studentId);
+            return null;
+        });
+    }
+
+    @Override
+    public void clearAllOperationalData() {
+        inTransaction(connection -> {
+            dao.clearAllOperationalData(connection);
+            return null;
+        });
+    }
+
+    @Override
     public List<TeacherDashboardRow> getTeacherDashboard(int teacherId) {
         return inTransaction(connection -> dao.fetchTeacherDashboard(connection, teacherId));
     }
@@ -138,6 +185,16 @@ public class QuizManagementServiceImpl implements QuizManagementService {
     @Override
     public List<Department> getDepartments() {
         return inTransaction(dao::fetchDepartments);
+    }
+
+    @Override
+    public List<Teacher> getAllTeachers() {
+        return inTransaction(dao::fetchAllTeachers);
+    }
+
+    @Override
+    public List<Student> getAllStudents() {
+        return inTransaction(dao::fetchAllStudents);
     }
 
     @Override

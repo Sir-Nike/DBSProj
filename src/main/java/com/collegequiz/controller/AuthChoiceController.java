@@ -12,4 +12,9 @@ public class AuthChoiceController extends BaseController {
     private void handleStudentChoice() {
         AppNavigator.showStudentLogin();
     }
+
+    @FXML
+    private void handleAdminChoice() {
+        AppNavigator.showAdminLogin();
+    }
 }

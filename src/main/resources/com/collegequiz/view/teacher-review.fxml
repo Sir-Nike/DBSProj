@@ -24,8 +24,9 @@
         <VBox spacing="14" styleClass="dashboard-layout">
             <HBox spacing="12" alignment="CENTER_LEFT" styleClass="toolbar-row">
                 <Button text="Refresh" onAction="#handleRefresh" styleClass="dashboard-action"/>
-                <Button text="Publish Selected" onAction="#handlePublish" styleClass="dashboard-action"/>
+                <Button fx:id="publishButton" text="Publish Selected" onAction="#handlePublish" styleClass="dashboard-action"/>
                 <Button text="Unpublish Selected" onAction="#handleUnpublish" styleClass="dashboard-action danger"/>
+                <Button text="Delete Selected Quiz" onAction="#handleDeleteQuiz" styleClass="dashboard-action danger"/>
             </HBox>
             <HBox spacing="12" styleClass="summary-strip">
                 <VBox spacing="4" styleClass="stat-card" HBox.hgrow="ALWAYS">

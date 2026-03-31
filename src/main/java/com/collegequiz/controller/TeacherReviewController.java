@@ -5,9 +5,14 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+
+import java.util.Optional;
 
 public class TeacherReviewController extends BaseController {
     @FXML private Label teacherLabel;
@@ -17,6 +22,7 @@ public class TeacherReviewController extends BaseController {
     @FXML private TableColumn<TeacherDashboardRow, Number> attemptsColumn;
     @FXML private TableColumn<TeacherDashboardRow, Number> marksColumn;
     @FXML private TableColumn<TeacherDashboardRow, String> publishedColumn;
+    @FXML private Button publishButton;
     @FXML private Label totalQuizzesLabel;
     @FXML private Label publishedQuizzesLabel;
     @FXML private Label draftQuizzesLabel;
@@ -39,6 +45,7 @@ public class TeacherReviewController extends BaseController {
         publishedColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().resultsPublished()));
 
         dashboardTable.setPlaceholder(new Label("No quizzes are available for publishing yet."));
+        dashboardTable.getSelectionModel().selectedItemProperty().addListener((obs, oldRow, newRow) -> updatePublishButtonState());
         refreshTable();
     }
 
@@ -52,6 +59,10 @@ public class TeacherReviewController extends BaseController {
         TeacherDashboardRow row = dashboardTable.getSelectionModel().getSelectedItem();
         if (row == null) {
             showError("Select Quiz", "Choose a quiz first.");
+            return;
+        }
+        if (row.attemptCount() == null || row.attemptCount() <= 0) {
+            showError("Cannot Publish Yet", "This quiz has no attempts yet. Wait for at least one student attempt before publishing.");
             return;
         }
         try {
@@ -78,6 +89,25 @@ public class TeacherReviewController extends BaseController {
     }
 
     @FXML
+    private void handleDeleteQuiz() {
+        TeacherDashboardRow row = dashboardTable.getSelectionModel().getSelectedItem();
+        if (row == null) {
+            showError("Select Quiz", "Choose a quiz first.");
+            return;
+        }
+        if (!confirm("Delete Quiz", "This will permanently remove the quiz, questions, attempts, and results. Continue?")) {
+            return;
+        }
+        try {
+            service.removeQuiz(row.quizId(), AppSession.getLoggedInTeacherId());
+            refreshTable();
+            showInfo("Quiz Removed", "The quiz was deleted.");
+        } catch (RuntimeException ex) {
+            showError("Delete Failed", ex.getMessage());
+        }
+    }
+
+    @FXML
     private void handleBack() {
         AppNavigator.showTeacherDashboard();
     }
@@ -95,12 +125,31 @@ public class TeacherReviewController extends BaseController {
             totalQuizzesLabel.setText(String.valueOf(rows.size()));
             publishedQuizzesLabel.setText(String.valueOf(published));
             draftQuizzesLabel.setText(String.valueOf(Math.max(0, rows.size() - published)));
+            updatePublishButtonState();
         } catch (RuntimeException ex) {
             dashboardTable.setItems(FXCollections.emptyObservableList());
             totalQuizzesLabel.setText("0");
             publishedQuizzesLabel.setText("0");
             draftQuizzesLabel.setText("0");
+            updatePublishButtonState();
             showError("Load Failed", ex.getMessage());
         }
+    }
+
+    private void updatePublishButtonState() {
+        if (publishButton == null || dashboardTable == null) {
+            return;
+        }
+        TeacherDashboardRow row = dashboardTable.getSelectionModel().getSelectedItem();
+        publishButton.setDisable(row == null || row.attemptCount() == null || row.attemptCount() <= 0);
+    }
+
+    private boolean confirm(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        Optional<ButtonType> choice = alert.showAndWait();
+        return choice.isPresent() && choice.get() == ButtonType.OK;
     }
 }

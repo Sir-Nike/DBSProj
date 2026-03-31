@@ -18,8 +18,17 @@ public interface QuizManagementDao {
     Integer createSubject(Connection connection, String subjectName, String subjectCode, int semester, int departmentId)
             throws SQLException;
 
+    Integer createDepartment(Connection connection, String departmentCode, String departmentName)
+            throws SQLException;
+
     Integer createQuiz(Connection connection, String quizTitle, int durationMinutes, java.time.LocalDateTime quizDate,
                        int subjectId, int createdBy) throws SQLException;
+
+    Integer createTeacher(Connection connection, String name, String password, int departmentId)
+            throws SQLException;
+
+    Integer createStudent(Connection connection, String registrationNo, String name, String password, int departmentId)
+            throws SQLException;
 
     Integer addQuestion(Connection connection, int quizId, String questionText, double marks, int displayOrder)
             throws SQLException;
@@ -39,11 +48,23 @@ public interface QuizManagementDao {
 
     void unpublishResults(Connection connection, int quizId, int teacherId) throws SQLException;
 
+    void removeQuiz(Connection connection, int quizId, int teacherId) throws SQLException;
+
+    void removeTeacher(Connection connection, int teacherId) throws SQLException;
+
+    void removeStudent(Connection connection, int studentId) throws SQLException;
+
+    void clearAllOperationalData(Connection connection) throws SQLException;
+
     List<TeacherDashboardRow> fetchTeacherDashboard(Connection connection, int teacherId) throws SQLException;
 
     List<StudentResultRow> fetchPublishedResults(Connection connection, int studentId) throws SQLException;
 
     List<Department> fetchDepartments(Connection connection) throws SQLException;
+
+    List<Teacher> fetchAllTeachers(Connection connection) throws SQLException;
+
+    List<Student> fetchAllStudents(Connection connection) throws SQLException;
 
     List<Teacher> fetchTeachersByDepartment(Connection connection, int departmentId) throws SQLException;
 
