@@ -28,42 +28,62 @@
     </top>
     <center>
         <VBox spacing="14" styleClass="dashboard-layout">
-            <HBox spacing="12" styleClass="summary-strip">
-                <VBox spacing="4" styleClass="stat-card" HBox.hgrow="ALWAYS">
-                    <Label text="Teachers" styleClass="stat-label"/>
-                    <Label fx:id="teacherCountLabel" text="0" styleClass="stat-value"/>
-                </VBox>
-                <VBox spacing="4" styleClass="stat-card" HBox.hgrow="ALWAYS">
-                    <Label text="Students" styleClass="stat-label"/>
-                    <Label fx:id="studentCountLabel" text="0" styleClass="stat-value"/>
-                </VBox>
-                <VBox spacing="4" styleClass="stat-card" HBox.hgrow="ALWAYS">
-                    <Label text="Departments" styleClass="stat-label"/>
-                    <Label fx:id="departmentCountLabel" text="0" styleClass="stat-value"/>
-                </VBox>
-            </HBox>
-
-            <VBox spacing="12" styleClass="panel-card">
-                <Label text="Create Department" styleClass="section-title"/>
-                <Label text="Departments drive teacher code generation and subject grouping." styleClass="subtitle-muted"/>
-                <HBox spacing="10">
+            <VBox spacing="10" styleClass="panel-card">
+                <HBox spacing="12" alignment="CENTER_LEFT">
                     <VBox spacing="4" HBox.hgrow="ALWAYS">
-                        <Label text="Department Code" styleClass="field-label"/>
-                        <TextField fx:id="departmentCodeField" promptText="CSE"/>
+                        <Label text="Overview" styleClass="section-title"/>
+                        <Label text="Current database footprint and management actions." styleClass="subtitle-muted"/>
                     </VBox>
-                    <VBox spacing="4" HBox.hgrow="ALWAYS">
-                        <Label text="Department Name" styleClass="field-label"/>
-                        <TextField fx:id="departmentNameField" promptText="Computer Science"/>
+                    <VBox spacing="4" alignment="CENTER_RIGHT">
+                        <Label text="Active admin" styleClass="field-label"/>
+                        <Label fx:id="adminLabel" text="admin" styleClass="stat-value"/>
                     </VBox>
-                    <VBox spacing="22" alignment="BOTTOM_CENTER">
-                        <Button text="Add Department" onAction="#handleAddDepartment" styleClass="dashboard-action"/>
+                </HBox>
+                <HBox spacing="12" styleClass="summary-strip">
+                    <VBox spacing="4" styleClass="stat-card" HBox.hgrow="ALWAYS">
+                        <Label text="Teachers" styleClass="stat-label"/>
+                        <Label fx:id="teacherCountLabel" text="0" styleClass="stat-value"/>
+                    </VBox>
+                    <VBox spacing="4" styleClass="stat-card" HBox.hgrow="ALWAYS">
+                        <Label text="Students" styleClass="stat-label"/>
+                        <Label fx:id="studentCountLabel" text="0" styleClass="stat-value"/>
+                    </VBox>
+                    <VBox spacing="4" styleClass="stat-card" HBox.hgrow="ALWAYS">
+                        <Label text="Departments" styleClass="stat-label"/>
+                        <Label fx:id="departmentCountLabel" text="0" styleClass="stat-value"/>
                     </VBox>
                 </HBox>
             </VBox>
 
-            <HBox spacing="16" VBox.vgrow="ALWAYS">
+            <HBox spacing="14">
                 <VBox spacing="12" styleClass="panel-card" HBox.hgrow="ALWAYS">
-                    <Label text="Manage Teachers" styleClass="section-title"/>
+                    <Label text="Create Department" styleClass="section-title"/>
+                    <Label text="Departments drive teacher code generation and subject grouping." styleClass="subtitle-muted"/>
+                    <HBox spacing="10">
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label text="Code" styleClass="field-label"/>
+                            <TextField fx:id="departmentCodeField" promptText="CSE"/>
+                        </VBox>
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label text="Name" styleClass="field-label"/>
+                            <TextField fx:id="departmentNameField" promptText="Computer Science Engineering"/>
+                        </VBox>
+                        <VBox spacing="22" alignment="BOTTOM_CENTER">
+                            <Button text="Add Department" onAction="#handleAddDepartment" styleClass="dashboard-action"/>
+                        </VBox>
+                    </HBox>
+                </VBox>
+            </HBox>
+
+            <HBox spacing="14" VBox.vgrow="ALWAYS">
+                <VBox spacing="12" styleClass="panel-card" HBox.hgrow="ALWAYS">
+                    <HBox spacing="12" alignment="CENTER_LEFT">
+                        <VBox spacing="2" HBox.hgrow="ALWAYS">
+                            <Label text="Manage Teachers" styleClass="section-title"/>
+                            <Label text="Create and remove teacher accounts." styleClass="subtitle-muted"/>
+                        </VBox>
+                        <Button text="Delete Selected Teacher" onAction="#handleDeleteTeacher" styleClass="dashboard-action danger"/>
+                    </HBox>
                     <GridPane hgap="10" vgap="10">
                         <columnConstraints>
                             <ColumnConstraints percentWidth="50"/>
@@ -89,18 +109,23 @@
                             <Button text="Add Teacher" onAction="#handleAddTeacher" maxWidth="Infinity" styleClass="dashboard-action" GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.columnSpan="2"/>
                         </children>
                     </GridPane>
-                    <TableView fx:id="teacherTable" prefHeight="170">
+                    <TableView fx:id="teacherTable" prefHeight="210" VBox.vgrow="ALWAYS">
                         <columns>
-                            <TableColumn fx:id="teacherCodeColumn" text="Code" prefWidth="120"/>
-                            <TableColumn fx:id="teacherNameColumn" text="Name" prefWidth="200"/>
-                            <TableColumn fx:id="teacherDepartmentColumn" text="Department" prefWidth="260"/>
+                            <TableColumn fx:id="teacherCodeColumn" text="Code" prefWidth="110"/>
+                            <TableColumn fx:id="teacherNameColumn" text="Name" prefWidth="180"/>
+                            <TableColumn fx:id="teacherDepartmentColumn" text="Department" prefWidth="320"/>
                         </columns>
                     </TableView>
-                    <Button text="Delete Selected Teacher" onAction="#handleDeleteTeacher" styleClass="dashboard-action danger"/>
                 </VBox>
 
                 <VBox spacing="12" styleClass="panel-card" HBox.hgrow="ALWAYS">
-                    <Label text="Manage Students" styleClass="section-title"/>
+                    <HBox spacing="12" alignment="CENTER_LEFT">
+                        <VBox spacing="2" HBox.hgrow="ALWAYS">
+                            <Label text="Manage Students" styleClass="section-title"/>
+                            <Label text="Create and remove student accounts." styleClass="subtitle-muted"/>
+                        </VBox>
+                        <Button text="Delete Selected Student" onAction="#handleDeleteStudent" styleClass="dashboard-action danger"/>
+                    </HBox>
                     <GridPane hgap="10" vgap="10">
                         <columnConstraints>
                             <ColumnConstraints percentWidth="50"/>
@@ -109,7 +134,7 @@
                         <children>
                             <VBox spacing="4" GridPane.rowIndex="0" GridPane.columnIndex="0">
                                 <Label text="Registration No" styleClass="field-label"/>
-                                <TextField fx:id="studentRegNoField" promptText="230100101"/>
+                                <TextField fx:id="studentRegNoField" promptText="240953194"/>
                             </VBox>
                             <VBox spacing="4" GridPane.rowIndex="0" GridPane.columnIndex="1">
                                 <Label text="Department" styleClass="field-label"/>
@@ -126,18 +151,18 @@
                             <Button text="Add Student" onAction="#handleAddStudent" maxWidth="Infinity" styleClass="dashboard-action" GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.columnSpan="2"/>
                         </children>
                     </GridPane>
-                    <TableView fx:id="studentTable" prefHeight="170">
+                    <TableView fx:id="studentTable" prefHeight="210" VBox.vgrow="ALWAYS">
                         <columns>
                             <TableColumn fx:id="studentRegColumn" text="Reg No" prefWidth="120"/>
-                            <TableColumn fx:id="studentNameColumn" text="Name" prefWidth="200"/>
-                            <TableColumn fx:id="studentDepartmentColumn" text="Department" prefWidth="260"/>
+                            <TableColumn fx:id="studentNameColumn" text="Name" prefWidth="180"/>
+                            <TableColumn fx:id="studentDepartmentColumn" text="Department" prefWidth="320"/>
                         </columns>
                     </TableView>
-                    <Button text="Delete Selected Student" onAction="#handleDeleteStudent" styleClass="dashboard-action danger"/>
                 </VBox>
             </HBox>
 
-            <HBox alignment="CENTER_RIGHT">
+            <HBox alignment="CENTER_RIGHT" spacing="10">
+                <Label text="This permanently removes all data, including departments." styleClass="subtitle-muted"/>
                 <Button text="Delete All Data" onAction="#handleDeleteAllData" styleClass="dashboard-action danger"/>
             </HBox>
         </VBox>

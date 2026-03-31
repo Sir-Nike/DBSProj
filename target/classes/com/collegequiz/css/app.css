@@ -84,6 +84,10 @@
     -fx-padding: 2 0 0 0;
 }
 
+.dashboard-layout .panel-card {
+    -fx-padding: 18 20 18 20;
+}
+
 .toolbar-row {
     -fx-padding: 0 0 2 0;
 }
@@ -291,11 +295,20 @@
 }
 
 .table-view .table-row-cell {
-    -fx-cell-size: 42px;
+    -fx-cell-size: 34px;
 }
 
 .table-view .table-row-cell:selected {
     -fx-background-color: rgba(31, 102, 255, 0.14);
+}
+
+.table-view .virtual-flow {
+    -fx-background-color: transparent;
+}
+
+.table-view .column-header,
+.table-view .filler {
+    -fx-background-color: transparent;
 }
 
 .question-card {

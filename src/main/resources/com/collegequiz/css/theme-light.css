@@ -95,6 +95,7 @@
 .table-view .table-row-cell {
     -fx-background-color: white;
     -fx-border-color: transparent transparent rgba(29, 47, 73, 0.06) transparent;
+    -fx-cell-size: 34px;
 }
 
 .table-view .table-row-cell:odd {
@@ -103,6 +104,11 @@
 
 .table-view .table-row-cell:selected {
     -fx-background-color: rgba(31, 102, 255, 0.16);
+}
+
+.table-view .column-header,
+.table-view .filler {
+    -fx-background-color: #f0f4fa;
 }
 
 .timer-badge {
