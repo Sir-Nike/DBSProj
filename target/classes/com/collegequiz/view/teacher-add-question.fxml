@@ -7,51 +7,82 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.collegequiz.controller.TeacherAddQuestionController">
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.collegequiz.controller.TeacherAddQuestionController" styleClass="screen-root">
     <top>
-        <VBox spacing="12" styleClass="page-shell">
-            <VBox spacing="6" styleClass="hero-panel">
-                <Label text="Add Question" styleClass="hero-title"/>
-                <Label fx:id="teacherLabel" text="Teacher"/>
+        <HBox alignment="CENTER_LEFT" spacing="16" styleClass="topbar">
+            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                <Label text="Add Question" styleClass="title-xxl"/>
+                <Label fx:id="teacherLabel" text="Teacher" styleClass="subtitle-muted"/>
             </VBox>
-            <HBox spacing="10">
-                <Button text="Back" onAction="#handleBack" styleClass="button secondary"/>
-            </HBox>
-        </VBox>
+            <Button text="Back" onAction="#handleBack" styleClass="button-ghost"/>
+            <Button text="Toggle Theme" onAction="#handleToggleTheme" styleClass="button-ghost"/>
+        </HBox>
     </top>
     <center>
-        <VBox spacing="14" styleClass="card">
-            <Label text="Question Details" styleClass="section-title"/>
-            <Label text="Quiz" styleClass="field-label"/>
-            <ComboBox fx:id="quizCombo"/>
-            <Label text="Question Text" styleClass="field-label"/>
-            <TextArea fx:id="questionTextArea" prefRowCount="2"/>
-            <Label text="Marks" styleClass="field-label"/>
-            <TextField fx:id="marksField"/>
-            <GridPane hgap="10" vgap="10">
-                <children>
-                    <Label text="Option 1" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-                    <TextField fx:id="option1Field" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
-                    <RadioButton fx:id="correct1" text="Correct" GridPane.rowIndex="0" GridPane.columnIndex="2"/>
+        <VBox alignment="CENTER" styleClass="dashboard-layout">
+            <VBox spacing="14" maxWidth="820" styleClass="panel-card auth-form">
+                <Label text="Question details" styleClass="section-title"/>
+                <Label text="Build a single-correct-answer MCQ." styleClass="subtitle-muted"/>
+                <HBox spacing="14">
+                    <VBox spacing="6" HBox.hgrow="ALWAYS">
+                        <Label text="Subject" styleClass="field-label"/>
+                        <ComboBox fx:id="subjectCombo" maxWidth="Infinity"/>
+                    </VBox>
+                    <VBox spacing="6" HBox.hgrow="ALWAYS">
+                        <Label text="Quiz" styleClass="field-label"/>
+                        <ComboBox fx:id="quizCombo" maxWidth="Infinity"/>
+                    </VBox>
+                </HBox>
+                <HBox spacing="14">
+                    <VBox spacing="6" HBox.hgrow="ALWAYS">
+                        <Label text="Question Text" styleClass="field-label"/>
+                        <TextArea fx:id="questionTextArea" prefRowCount="3" wrapText="true" VBox.vgrow="ALWAYS"/>
+                    </VBox>
+                    <VBox spacing="6" minWidth="140">
+                        <Label text="Marks" styleClass="field-label"/>
+                        <TextField fx:id="marksField" maxWidth="Infinity"/>
+                        <Label text="Correct Option" styleClass="field-label"/>
+                        <RadioButton fx:id="correct1" text="Option 1"/>
+                        <RadioButton fx:id="correct2" text="Option 2"/>
+                        <RadioButton fx:id="correct3" text="Option 3"/>
+                        <RadioButton fx:id="correct4" text="Option 4"/>
+                    </VBox>
+                </HBox>
+                <GridPane hgap="10" vgap="10" styleClass="option-grid">
+                    <columnConstraints>
+                        <ColumnConstraints percentWidth="14"/>
+                        <ColumnConstraints percentWidth="72"/>
+                        <ColumnConstraints percentWidth="14"/>
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints vgrow="NEVER"/>
+                        <RowConstraints vgrow="NEVER"/>
+                        <RowConstraints vgrow="NEVER"/>
+                        <RowConstraints vgrow="NEVER"/>
+                    </rowConstraints>
+                    <children>
+                        <Label text="1" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="option-chip"/>
+                        <TextField fx:id="option1Field" GridPane.rowIndex="0" GridPane.columnIndex="1" maxWidth="Infinity"/>
 
-                    <Label text="Option 2" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                    <TextField fx:id="option2Field" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
-                    <RadioButton fx:id="correct2" text="Correct" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
+                        <Label text="2" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="option-chip"/>
+                        <TextField fx:id="option2Field" GridPane.rowIndex="1" GridPane.columnIndex="1" maxWidth="Infinity"/>
 
-                    <Label text="Option 3" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-                    <TextField fx:id="option3Field" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
-                    <RadioButton fx:id="correct3" text="Correct" GridPane.rowIndex="2" GridPane.columnIndex="2"/>
+                        <Label text="3" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="option-chip"/>
+                        <TextField fx:id="option3Field" GridPane.rowIndex="2" GridPane.columnIndex="1" maxWidth="Infinity"/>
 
-                    <Label text="Option 4" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-                    <TextField fx:id="option4Field" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
-                    <RadioButton fx:id="correct4" text="Correct" GridPane.rowIndex="3" GridPane.columnIndex="2"/>
-                </children>
-            </GridPane>
-            <Button text="Save Question" onAction="#handleSave" maxWidth="Infinity"/>
+                        <Label text="4" GridPane.rowIndex="3" GridPane.columnIndex="0" styleClass="option-chip"/>
+                        <TextField fx:id="option4Field" GridPane.rowIndex="3" GridPane.columnIndex="1" maxWidth="Infinity"/>
+                    </children>
+                </GridPane>
+                <Button text="Save Question" onAction="#handleSave" maxWidth="Infinity" styleClass="dashboard-action"/>
+            </VBox>
         </VBox>
     </center>
 </BorderPane>

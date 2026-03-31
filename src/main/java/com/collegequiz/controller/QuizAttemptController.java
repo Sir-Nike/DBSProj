@@ -27,6 +27,7 @@ public class QuizAttemptController extends BaseController {
     private List<Question> questions;
     private int currentQuestionIndex;
     private Integer attemptId;
+    private boolean submitted;
 
     @FXML
     private void initialize() {
@@ -50,6 +51,11 @@ public class QuizAttemptController extends BaseController {
         quizMetaLabel.setText("Quiz #" + quiz.quizId() + " | Total Marks: " + quiz.totalMarks());
         remainingSeconds = quiz.durationMinutes() * 60;
         questions = service.getQuestionsByQuiz(quizId);
+        if (questions == null || questions.isEmpty()) {
+            showError("Quiz Not Ready", "This quiz has no questions yet. Please try again later.");
+            AppNavigator.showStudentDashboard();
+            return;
+        }
         currentQuestionIndex = 0;
         updateTimerLabel();
         showQuestion();
@@ -58,6 +64,9 @@ public class QuizAttemptController extends BaseController {
 
     @FXML
     private void handlePrev() {
+        if (questions == null || questions.isEmpty()) {
+            return;
+        }
         if (currentQuestionIndex > 0) {
             currentQuestionIndex--;
             showQuestion();
@@ -66,6 +75,9 @@ public class QuizAttemptController extends BaseController {
 
     @FXML
     private void handleNext() {
+        if (questions == null || questions.isEmpty()) {
+            return;
+        }
         if (currentQuestionIndex < questions.size() - 1) {
             currentQuestionIndex++;
             showQuestion();
@@ -85,6 +97,9 @@ public class QuizAttemptController extends BaseController {
     }
 
     private void showQuestion() {
+        if (questions == null || questions.isEmpty()) {
+            return;
+        }
         Question question = questions.get(currentQuestionIndex);
         progressLabel.setText("Question " + (currentQuestionIndex + 1) + " of " + questions.size());
         questionTextLabel.setText(question.displayOrder() + ". " + question.questionText());
@@ -141,14 +156,22 @@ public class QuizAttemptController extends BaseController {
     }
 
     private void submitNow(boolean auto) {
-        stopTimer();
-        double score = service.submitAttempt(attemptId);
-        if (auto) {
-            showInfo("Auto Submitted", "Time is over. Score: " + score);
-        } else {
-            showInfo("Submitted", "Your attempt was submitted. Score: " + score);
+        if (submitted) {
+            return;
         }
-        QuizRuntimeContext.clear();
-        AppNavigator.showStudentDashboard();
+        submitted = true;
+        stopTimer();
+        try {
+            service.submitAttempt(attemptId);
+            String message = auto
+                    ? "Time is over. Your attempt has been submitted. Results will appear after the teacher publishes them."
+                    : "Your attempt has been submitted. Results will appear after the teacher publishes them.";
+            showInfo(auto ? "Auto Submitted" : "Submitted", message);
+            QuizRuntimeContext.clear();
+            AppNavigator.showStudentDashboard();
+        } catch (RuntimeException ex) {
+            submitted = false;
+            showError("Submit Failed", ex.getMessage());
+        }
     }
 }

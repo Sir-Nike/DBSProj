@@ -64,4 +64,6 @@ public interface QuizManagementService {
     Student authenticateStudent(String registrationNo, String password);
 
     Integer getSelectedOptionId(int attemptId, int questionId);
+
+    String getAttemptStatus(int quizId, int studentId);
 }

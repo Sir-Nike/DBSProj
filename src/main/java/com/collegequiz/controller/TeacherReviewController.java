@@ -12,7 +12,6 @@ import javafx.scene.control.TableView;
 public class TeacherReviewController extends BaseController {
     @FXML private Label teacherLabel;
     @FXML private TableView<TeacherDashboardRow> dashboardTable;
-    @FXML private TableColumn<TeacherDashboardRow, Number> quizIdColumn;
     @FXML private TableColumn<TeacherDashboardRow, String> titleColumn;
     @FXML private TableColumn<TeacherDashboardRow, String> subjectColumn;
     @FXML private TableColumn<TeacherDashboardRow, Number> attemptsColumn;
@@ -27,10 +26,11 @@ public class TeacherReviewController extends BaseController {
             return;
         }
 
-        teacherLabel.setText(AppSession.getLoggedInTeacher().teacherCode());
-        quizIdColumn.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().quizId()));
+        var teacher = AppSession.getLoggedInTeacher();
+        teacherLabel.setText(teacher.teacherCode() + " · " + teacher.name());
         titleColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().quizTitle()));
-        subjectColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().subjectCode()));
+        subjectColumn.setCellValueFactory(data -> new SimpleStringProperty(
+                data.getValue().subjectCode() + " - " + data.getValue().subjectName()));
         attemptsColumn.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().attemptCount()));
         marksColumn.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().totalMarks()));
         publishedColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().resultsPublished()));

@@ -1,7 +1,5 @@
 package com.collegequiz.controller;
 
-import com.collegequiz.model.Department;
-import com.collegequiz.model.Question;
 import com.collegequiz.model.Quiz;
 import com.collegequiz.model.Subject;
 import com.collegequiz.model.Teacher;
@@ -20,6 +18,7 @@ import java.util.List;
 
 public class TeacherAddQuestionController extends BaseController {
     @FXML private Label teacherLabel;
+    @FXML private ComboBox<Subject> subjectCombo;
     @FXML private ComboBox<Quiz> quizCombo;
     @FXML private TextArea questionTextArea;
     @FXML private TextField marksField;
@@ -36,13 +35,14 @@ public class TeacherAddQuestionController extends BaseController {
 
     @FXML
     private void initialize() {
-        if (AppSession.getLoggedInTeacher() == null) {
+        Teacher teacher = AppSession.getLoggedInTeacher();
+        if (teacher == null) {
             showError("Session Missing", "No teacher is logged in.");
             AppNavigator.showLogin();
             return;
         }
 
-        teacherLabel.setText(AppSession.getLoggedInTeacher().teacherCode());
+        teacherLabel.setText(teacher.teacherCode() + " · " + teacher.name());
         correct1.setToggleGroup(correctGroup);
         correct2.setToggleGroup(correctGroup);
         correct3.setToggleGroup(correctGroup);
@@ -51,12 +51,20 @@ public class TeacherAddQuestionController extends BaseController {
         correct2.setUserData(2);
         correct3.setUserData(3);
         correct4.setUserData(4);
-        quizCombo.setItems(FXCollections.observableArrayList(loadTeacherQuizzes()));
+
+        subjectCombo.setItems(FXCollections.observableArrayList(loadTeacherSubjects()));
+        subjectCombo.setOnAction(event -> refreshQuizzesForSelectedSubject());
+        refreshQuizzesForSelectedSubject();
     }
 
     @FXML
     private void handleSave() {
+        Subject subject = subjectCombo.getValue();
         Quiz quiz = quizCombo.getValue();
+        if (subject == null) {
+            showError("Missing Subject", "Choose a subject first.");
+            return;
+        }
         if (quiz == null) {
             showError("Missing Quiz", "Choose a quiz.");
             return;
@@ -67,8 +75,8 @@ public class TeacherAddQuestionController extends BaseController {
         }
 
         try {
-            double marks = Double.parseDouble(marksField.getText().trim());
             String questionText = questionTextArea.getText().trim();
+            String marksText = marksField.getText().trim();
             List<String> options = List.of(
                     option1Field.getText().trim(),
                     option2Field.getText().trim(),
@@ -76,8 +84,14 @@ public class TeacherAddQuestionController extends BaseController {
                     option4Field.getText().trim()
             );
 
-            if (questionText.isBlank() || options.stream().anyMatch(String::isBlank)) {
-                showError("Incomplete Question", "Question and all four options are required.");
+            if (questionText.isBlank() || marksText.isBlank() || options.stream().anyMatch(String::isBlank)) {
+                showError("Incomplete Question", "Question, marks, and all four options are required.");
+                return;
+            }
+
+            double marks = Double.parseDouble(marksText);
+            if (marks <= 0) {
+                showError("Invalid Marks", "Marks must be greater than zero.");
                 return;
             }
 
@@ -92,7 +106,7 @@ public class TeacherAddQuestionController extends BaseController {
                 service.addOption(questionId, options.get(i), i + 1 == correctIndex ? "Y" : "N", i + 1);
             }
 
-            showInfo("Question Added", "Question ID " + questionId + " created.");
+            showInfo("Question Added", "Question added successfully.");
             clearForm();
         } catch (NumberFormatException ex) {
             showError("Invalid Marks", "Marks must be numeric.");
@@ -104,19 +118,37 @@ public class TeacherAddQuestionController extends BaseController {
         AppNavigator.showTeacherDashboard();
     }
 
-    private List<Quiz> loadTeacherQuizzes() {
-        List<Quiz> quizzes = new ArrayList<>();
+    private List<Subject> loadTeacherSubjects() {
+        List<Subject> subjects = new ArrayList<>();
         Teacher teacher = AppSession.getLoggedInTeacher();
         if (teacher != null) {
-            for (Subject subject : service.getSubjectsByDepartment(teacher.departmentId())) {
-                quizzes.addAll(service.getQuizzesBySubject(subject.subjectId()));
+            subjects.addAll(service.getSubjectsByDepartment(teacher.departmentId()));
+        }
+        subjects.sort(Comparator.comparing(Subject::subjectCode));
+        return subjects;
+    }
+
+    private void refreshQuizzesForSelectedSubject() {
+        Subject subject = subjectCombo.getValue();
+        if (subject == null) {
+            quizCombo.setItems(FXCollections.emptyObservableList());
+            return;
+        }
+
+        Teacher teacher = AppSession.getLoggedInTeacher();
+        List<Quiz> quizzes = new ArrayList<>();
+        for (Quiz quiz : service.getQuizzesBySubject(subject.subjectId())) {
+            if (teacher != null && teacher.teacherId().equals(quiz.createdBy())) {
+                quizzes.add(quiz);
             }
         }
-        quizzes.sort(Comparator.comparing(Quiz::quizId));
-        return quizzes;
+        quizzes.sort(Comparator.comparing(Quiz::quizTitle));
+        quizCombo.setItems(FXCollections.observableArrayList(quizzes));
     }
 
     private void clearForm() {
+        subjectCombo.setValue(null);
+        quizCombo.setItems(FXCollections.emptyObservableList());
         questionTextArea.clear();
         marksField.clear();
         option1Field.clear();

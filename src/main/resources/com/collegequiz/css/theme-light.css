@@ -1,0 +1,91 @@
+.root {
+    -fx-background-color: linear-gradient(to bottom right, #f7f9fc, #eef3f9);
+}
+
+.hero-panel,
+.hero-card,
+.form-card,
+.choice-card,
+.panel-card,
+.card,
+.auth-hero,
+.auth-choice-panel,
+.auth-form,
+.question-shell,
+.dashboard-aside,
+.dashboard-actions,
+.question-card {
+    -fx-background-color: rgba(255, 255, 255, 0.96);
+    -fx-border-color: #dce5f0;
+}
+
+.title-xxl,
+.title-lg,
+.section-title,
+.question-title {
+    -fx-text-fill: #14243b;
+}
+
+.subtitle-muted,
+.field-label {
+    -fx-text-fill: #5f7086;
+}
+
+.button {
+    -fx-background-color: linear-gradient(to right, #1f66ff, #2f8cff);
+    -fx-text-fill: white;
+}
+
+.button:hover {
+    -fx-background-color: linear-gradient(to right, #1853d0, #2676e3);
+}
+
+.button-ghost {
+    -fx-background-color: #eaf0f7;
+    -fx-text-fill: #22334a;
+    -fx-border-color: #d8e2ef;
+}
+
+.dashboard-action {
+    -fx-background-color: #edf3f9;
+    -fx-text-fill: #1e3047;
+    -fx-border-color: #d8e2ef;
+}
+
+.dashboard-action:hover {
+    -fx-background-color: #e4ecf7;
+}
+
+.button.secondary {
+    -fx-background-color: #eaf0f7;
+    -fx-text-fill: #22334a;
+    -fx-border-color: #d8e2ef;
+}
+
+.button.danger {
+    -fx-background-color: linear-gradient(to right, #e85555, #cc3b3b);
+}
+
+.table-view {
+    -fx-background-color: white;
+    -fx-border-color: #dce5f0;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #f0f4fa;
+}
+
+.timer-badge {
+    -fx-background-color: #eaf0f7;
+    -fx-text-fill: #14243b;
+}
+
+.stat-card {
+    -fx-background-color: #f8fbff;
+    -fx-border-color: #dce5f0;
+}
+
+.option-chip {
+    -fx-background-color: #edf3f9;
+    -fx-text-fill: #22334a;
+}

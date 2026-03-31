@@ -62,7 +62,7 @@ public class StudentDashboardController extends BaseController {
 
         studentNameLabel.setText(student.name());
         registrationLabel.setText(student.registrationNo());
-        departmentLabel.setText("Department ID: " + student.departmentId());
+        departmentLabel.setText("Dept " + student.departmentId());
 
         quizIdColumn.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().quizId()));
         quizTitleColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().quizTitle()));
@@ -114,6 +114,10 @@ public class StudentDashboardController extends BaseController {
         for (Subject subject : subjects) {
             List<Quiz> quizzes = service.getQuizzesBySubject(subject.subjectId());
             for (Quiz quiz : quizzes) {
+                String attemptStatus = service.getAttemptStatus(quiz.quizId(), student.studentId());
+                if ("SUBMITTED".equals(attemptStatus) || "AUTO_SUBMITTED".equals(attemptStatus)) {
+                    continue;
+                }
                 availableQuizzes.add(new AvailableQuizRow(
                         quiz.quizId(),
                         quiz.quizTitle(),

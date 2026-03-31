@@ -6,26 +6,30 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.collegequiz.controller.AuthChoiceController">
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.collegequiz.controller.AuthChoiceController" styleClass="auth-root">
+    <top>
+        <HBox alignment="CENTER_RIGHT" styleClass="topbar">
+            <Button text="Toggle Theme" onAction="#handleToggleTheme" styleClass="button-ghost"/>
+        </HBox>
+    </top>
     <center>
-        <VBox alignment="CENTER" spacing="18" styleClass="screen-root">
-            <VBox alignment="CENTER_LEFT" spacing="8" styleClass="hero-card">
+        <VBox alignment="TOP_CENTER" spacing="18" styleClass="auth-center">
+            <VBox spacing="6" alignment="CENTER" styleClass="auth-brand">
                 <Label text="College Quiz" styleClass="title-xxl"/>
-                <Label text="Choose your role to continue." styleClass="subtitle-muted"/>
+                <Label text="Pick your role to continue." styleClass="subtitle-muted"/>
             </VBox>
-
-            <HBox alignment="CENTER" spacing="16">
-                <VBox alignment="CENTER" spacing="10" styleClass="choice-card">
-                    <Label text="Teacher" styleClass="title-lg"/>
-                    <Label text="Create quizzes, add questions, and publish results." styleClass="subtitle-muted"/>
-                    <Button text="Teacher Login" onAction="#handleTeacherChoice" maxWidth="Infinity"/>
-                </VBox>
-                <VBox alignment="CENTER" spacing="10" styleClass="choice-card">
-                    <Label text="Student" styleClass="title-lg"/>
-                    <Label text="Attempt quizzes and view published results." styleClass="subtitle-muted"/>
-                    <Button text="Student Login" onAction="#handleStudentChoice" maxWidth="Infinity"/>
-                </VBox>
-            </HBox>
+            <VBox spacing="14" styleClass="panel-card auth-shell">
+                <HBox spacing="16" alignment="CENTER" styleClass="role-grid">
+                    <VBox spacing="10" styleClass="choice-card role-card" HBox.hgrow="ALWAYS">
+                        <Label text="Teacher" styleClass="title-lg"/>
+                        <Button text="Continue as Teacher" onAction="#handleTeacherChoice" maxWidth="Infinity" styleClass="dashboard-action"/>
+                    </VBox>
+                    <VBox spacing="10" styleClass="choice-card role-card" HBox.hgrow="ALWAYS">
+                        <Label text="Student" styleClass="title-lg"/>
+                        <Button text="Continue as Student" onAction="#handleStudentChoice" maxWidth="Infinity" styleClass="dashboard-action"/>
+                    </VBox>
+                </HBox>
+            </VBox>
         </VBox>
     </center>
 </BorderPane>

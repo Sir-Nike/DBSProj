@@ -2,6 +2,7 @@ package com.collegequiz.controller;
 
 import com.collegequiz.service.QuizManagementService;
 import com.collegequiz.service.impl.QuizManagementServiceImpl;
+import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 
 public abstract class BaseController {
@@ -29,5 +30,11 @@ public abstract class BaseController {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    @FXML
+    public void handleToggleTheme() {
+        ThemeManager.toggle();
+        AppNavigator.applyTheme();
     }
 }

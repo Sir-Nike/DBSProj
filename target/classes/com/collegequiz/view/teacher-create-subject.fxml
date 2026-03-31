@@ -1,37 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.collegequiz.controller.TeacherCreateSubjectController">
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.collegequiz.controller.TeacherCreateSubjectController" styleClass="screen-root">
     <top>
-        <VBox spacing="12" styleClass="page-shell">
-            <VBox spacing="6" styleClass="hero-panel">
-                <Label text="Create Subject" styleClass="hero-title"/>
-                <Label fx:id="teacherLabel" text="Teacher"/>
+        <HBox alignment="CENTER_LEFT" spacing="16" styleClass="topbar">
+            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                <Label text="Create Subject" styleClass="title-xxl"/>
+                <Label fx:id="teacherLabel" text="Teacher" styleClass="subtitle-muted"/>
             </VBox>
-            <HBox spacing="10">
-                <Button text="Back" onAction="#handleBack" styleClass="button secondary"/>
-            </HBox>
-        </VBox>
+            <Button text="Back" onAction="#handleBack" styleClass="button-ghost"/>
+            <Button text="Toggle Theme" onAction="#handleToggleTheme" styleClass="button-ghost"/>
+        </HBox>
     </top>
     <center>
-        <VBox spacing="14" maxWidth="520" styleClass="card" BorderPane.alignment="CENTER">
-            <Label text="Subject Details" styleClass="section-title"/>
-            <Label text="Department" styleClass="field-label"/>
-            <ComboBox fx:id="departmentCombo"/>
-            <Label text="Subject Name" styleClass="field-label"/>
-            <TextField fx:id="subjectNameField"/>
-            <Label text="Subject Code" styleClass="field-label"/>
-            <TextField fx:id="subjectCodeField"/>
-            <Label text="Semester" styleClass="field-label"/>
-            <TextField fx:id="semesterField"/>
-            <Button text="Save Subject" onAction="#handleSave" maxWidth="Infinity"/>
+        <VBox alignment="CENTER" styleClass="dashboard-layout">
+            <VBox spacing="14" maxWidth="540" styleClass="panel-card auth-form">
+                <Label text="Subject details" styleClass="section-title"/>
+                <Label text="Add a subject under your department." styleClass="subtitle-muted"/>
+                <Label text="Department" styleClass="field-label"/>
+                <Label fx:id="departmentLabel" text="Department" styleClass="title-lg"/>
+                <Label text="Subject Name" styleClass="field-label"/>
+                <TextField fx:id="subjectNameField" maxWidth="Infinity"/>
+                <Label text="Subject Code" styleClass="field-label"/>
+                <TextField fx:id="subjectCodeField" maxWidth="Infinity"/>
+                <Label text="Semester" styleClass="field-label"/>
+                <TextField fx:id="semesterField" maxWidth="Infinity"/>
+                <Button text="Save Subject" onAction="#handleSave" maxWidth="Infinity" styleClass="dashboard-action"/>
+            </VBox>
         </VBox>
     </center>
 </BorderPane>

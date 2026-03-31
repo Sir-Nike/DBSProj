@@ -188,6 +188,11 @@ public class QuizManagementServiceImpl implements QuizManagementService {
         return inTransaction(connection -> dao.findSelectedOptionId(connection, attemptId, questionId));
     }
 
+    @Override
+    public String getAttemptStatus(int quizId, int studentId) {
+        return inTransaction(connection -> dao.findAttemptStatus(connection, quizId, studentId));
+    }
+
     @FunctionalInterface
     private interface SqlWork<T> {
         T apply(Connection connection) throws SQLException;

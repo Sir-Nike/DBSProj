@@ -527,4 +527,24 @@ public class QuizManagementDaoImpl implements QuizManagementDao {
         }
         return null;
     }
+
+    @Override
+    public String findAttemptStatus(Connection connection, int quizId, int studentId) throws SQLException {
+        String sql = """
+                SELECT STATUS
+                  FROM QUIZ_ATTEMPT
+                 WHERE QUIZ_ID = ?
+                   AND STUDENT_ID = ?
+                """;
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, quizId);
+            ps.setInt(2, studentId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("STATUS");
+                }
+            }
+        }
+        return null;
+    }
 }

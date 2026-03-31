@@ -7,6 +7,8 @@ import javafx.scene.control.Label;
 public class TeacherHomeController extends BaseController {
     @FXML
     private Label teacherLabel;
+    @FXML
+    private Label teacherMetaLabel;
 
     @FXML
     private void initialize() {
@@ -17,7 +19,8 @@ public class TeacherHomeController extends BaseController {
             return;
         }
 
-        teacherLabel.setText(teacher.teacherCode() + " · " + teacher.name());
+        teacherLabel.setText(teacher.name());
+        teacherMetaLabel.setText(teacher.teacherCode() + " · Department " + teacher.departmentId());
     }
 
     @FXML

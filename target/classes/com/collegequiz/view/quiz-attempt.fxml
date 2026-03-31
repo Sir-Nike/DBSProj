@@ -4,31 +4,35 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.collegequiz.controller.QuizAttemptController">
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.collegequiz.controller.QuizAttemptController" styleClass="screen-root">
     <top>
-        <VBox spacing="12" styleClass="page-shell">
-            <VBox spacing="6" styleClass="hero-panel">
-                <Label text="Quiz Attempt" styleClass="hero-title"/>
-                <Label fx:id="quizTitleLabel" text="Quiz Title"/>
-                <Label fx:id="quizMetaLabel" text="Meta"/>
-                <Label fx:id="timerLabel" text="Time Left: 00:00" styleClass="timer-badge"/>
+        <HBox alignment="CENTER_LEFT" spacing="16" styleClass="topbar">
+            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                <Label text="Quiz Attempt" styleClass="title-xxl"/>
+                <Label fx:id="quizTitleLabel" text="Quiz Title" styleClass="subtitle-muted"/>
+                <Label fx:id="quizMetaLabel" text="Meta" styleClass="subtitle-muted"/>
             </VBox>
-            <HBox spacing="10">
-                <Button text="Back to Dashboard" onAction="#handleBackToDashboard" styleClass="button secondary"/>
-                <Button text="Previous" onAction="#handlePrev" styleClass="button secondary"/>
-                <Button text="Next" onAction="#handleNext"/>
-                <Button text="Submit Quiz" onAction="#handleSubmit"/>
-            </HBox>
-        </VBox>
+            <Label fx:id="timerLabel" text="Time Left: 00:00" styleClass="timer-badge"/>
+            <Button text="Back" onAction="#handleBackToDashboard" styleClass="button-ghost"/>
+            <Button text="Toggle Theme" onAction="#handleToggleTheme" styleClass="button-ghost"/>
+        </HBox>
     </top>
     <center>
-        <VBox spacing="18" alignment="CENTER" styleClass="page-shell">
-            <VBox spacing="12" maxWidth="760" styleClass="card">
-                <Label fx:id="progressLabel" text="Question 1 of 1" styleClass="section-title"/>
+        <VBox alignment="CENTER" styleClass="dashboard-layout">
+            <VBox spacing="16" maxWidth="860" styleClass="panel-card question-shell">
+                <HBox alignment="CENTER_LEFT" spacing="12">
+                    <Label fx:id="progressLabel" text="Question 1 of 1" styleClass="section-title"/>
+                </HBox>
                 <Label fx:id="questionTextLabel" text="Question text" wrapText="true" styleClass="question-title"/>
-                <VBox fx:id="optionsContainer" spacing="10"/>
+                <VBox fx:id="optionsContainer" spacing="10" styleClass="options-stack"/>
+                <HBox spacing="10" alignment="CENTER_RIGHT" styleClass="attempt-footer">
+                    <Button text="Previous" onAction="#handlePrev" styleClass="button-ghost"/>
+                    <Button text="Next" onAction="#handleNext" styleClass="dashboard-action"/>
+                    <Button text="Submit Quiz" onAction="#handleSubmit" styleClass="dashboard-action"/>
+                </HBox>
             </VBox>
         </VBox>
     </center>

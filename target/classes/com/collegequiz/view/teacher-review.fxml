@@ -6,32 +6,34 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.collegequiz.controller.TeacherReviewController">
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.collegequiz.controller.TeacherReviewController" styleClass="screen-root">
     <top>
-        <VBox spacing="12" styleClass="page-shell">
-            <VBox spacing="6" styleClass="hero-panel">
-                <Label text="Review / Publish Results" styleClass="hero-title"/>
-                <Label fx:id="teacherLabel" text="Teacher"/>
+        <HBox alignment="CENTER_LEFT" spacing="16" styleClass="topbar">
+            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                <Label text="Review / Publish Results" styleClass="title-xxl"/>
+                <Label fx:id="teacherLabel" text="Teacher" styleClass="subtitle-muted"/>
             </VBox>
-            <HBox spacing="10">
-                <Button text="Back" onAction="#handleBack" styleClass="button secondary"/>
-                <Button text="Refresh" onAction="#handleRefresh"/>
-                <Button text="Publish Selected" onAction="#handlePublish"/>
-                <Button text="Unpublish Selected" onAction="#handleUnpublish" styleClass="button danger"/>
-            </HBox>
-        </VBox>
+            <Button text="Back" onAction="#handleBack" styleClass="button-ghost"/>
+            <Button text="Toggle Theme" onAction="#handleToggleTheme" styleClass="button-ghost"/>
+        </HBox>
     </top>
     <center>
-        <VBox styleClass="page-shell">
-            <VBox styleClass="card">
-                <Label text="Teacher Dashboard" styleClass="section-title"/>
-                <TableView fx:id="dashboardTable" prefHeight="500">
+        <VBox spacing="14" styleClass="dashboard-layout">
+            <HBox spacing="12" alignment="CENTER_LEFT" styleClass="toolbar-row">
+                <Button text="Refresh" onAction="#handleRefresh" styleClass="dashboard-action"/>
+                <Button text="Publish Selected" onAction="#handlePublish" styleClass="dashboard-action"/>
+                <Button text="Unpublish Selected" onAction="#handleUnpublish" styleClass="dashboard-action danger"/>
+            </HBox>
+            <VBox spacing="10" styleClass="panel-card">
+                <Label text="Teacher dashboard" styleClass="section-title"/>
+                <Label text="Publish results only when they are ready for students." styleClass="subtitle-muted"/>
+                <TableView fx:id="dashboardTable" prefHeight="520" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="quizIdColumn" text="Quiz ID" prefWidth="90"/>
-                        <TableColumn fx:id="titleColumn" text="Title" prefWidth="300"/>
-                        <TableColumn fx:id="subjectColumn" text="Subject" prefWidth="220"/>
+                        <TableColumn fx:id="titleColumn" text="Title" prefWidth="320"/>
+                        <TableColumn fx:id="subjectColumn" text="Subject" prefWidth="260"/>
                         <TableColumn fx:id="attemptsColumn" text="Attempts" prefWidth="100"/>
                         <TableColumn fx:id="marksColumn" text="Marks" prefWidth="90"/>
                         <TableColumn fx:id="publishedColumn" text="Published" prefWidth="100"/>

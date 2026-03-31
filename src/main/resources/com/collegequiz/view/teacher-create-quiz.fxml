@@ -7,32 +7,35 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.collegequiz.controller.TeacherCreateQuizController">
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.collegequiz.controller.TeacherCreateQuizController" styleClass="screen-root">
     <top>
-        <VBox spacing="12" styleClass="page-shell">
-            <VBox spacing="6" styleClass="hero-panel">
-                <Label text="Create Quiz" styleClass="hero-title"/>
-                <Label fx:id="teacherLabel" text="Teacher"/>
+        <HBox alignment="CENTER_LEFT" spacing="16" styleClass="topbar">
+            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                <Label text="Create Quiz" styleClass="title-xxl"/>
+                <Label fx:id="teacherLabel" text="Teacher" styleClass="subtitle-muted"/>
             </VBox>
-            <HBox spacing="10">
-                <Button text="Back" onAction="#handleBack" styleClass="button secondary"/>
-            </HBox>
-        </VBox>
+            <Button text="Back" onAction="#handleBack" styleClass="button-ghost"/>
+            <Button text="Toggle Theme" onAction="#handleToggleTheme" styleClass="button-ghost"/>
+        </HBox>
     </top>
     <center>
-        <VBox spacing="14" maxWidth="520" styleClass="card" BorderPane.alignment="CENTER">
-            <Label text="Quiz Details" styleClass="section-title"/>
-            <Label text="Subject" styleClass="field-label"/>
-            <ComboBox fx:id="subjectCombo"/>
-            <Label text="Quiz Title" styleClass="field-label"/>
-            <TextField fx:id="quizTitleField"/>
-            <Label text="Duration (minutes)" styleClass="field-label"/>
-            <TextField fx:id="durationField"/>
-            <Label text="Quiz Date" styleClass="field-label"/>
-            <DatePicker fx:id="quizDatePicker"/>
-            <Button text="Save Quiz" onAction="#handleSave" maxWidth="Infinity"/>
+        <VBox alignment="CENTER" styleClass="dashboard-layout">
+            <VBox spacing="14" maxWidth="540" styleClass="panel-card auth-form">
+                <Label text="Quiz details" styleClass="section-title"/>
+                <Label text="Attach the quiz to a subject and set its timing." styleClass="subtitle-muted"/>
+                <Label text="Subject" styleClass="field-label"/>
+                <ComboBox fx:id="subjectCombo" maxWidth="Infinity"/>
+                <Label text="Quiz Title" styleClass="field-label"/>
+                <TextField fx:id="quizTitleField" maxWidth="Infinity"/>
+                <Label text="Duration (minutes)" styleClass="field-label"/>
+                <TextField fx:id="durationField" maxWidth="Infinity"/>
+                <Label text="Quiz Date" styleClass="field-label"/>
+                <DatePicker fx:id="quizDatePicker" maxWidth="Infinity"/>
+                <Button text="Save Quiz" onAction="#handleSave" maxWidth="Infinity" styleClass="dashboard-action"/>
+            </VBox>
         </VBox>
     </center>
 </BorderPane>

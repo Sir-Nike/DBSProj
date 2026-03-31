@@ -5,21 +5,28 @@
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.collegequiz.controller.StudentLoginController">
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.collegequiz.controller.StudentLoginController" styleClass="auth-root">
+    <top>
+        <HBox alignment="CENTER_RIGHT" styleClass="topbar">
+            <Button text="Toggle Theme" onAction="#handleToggleTheme" styleClass="button-ghost"/>
+        </HBox>
+    </top>
     <center>
-        <VBox alignment="CENTER" spacing="16" styleClass="screen-root">
-            <VBox spacing="6" styleClass="hero-card">
+        <VBox alignment="TOP_CENTER" spacing="18" styleClass="auth-center">
+            <VBox spacing="6" alignment="CENTER" styleClass="auth-brand">
                 <Label text="Student Login" styleClass="title-xxl"/>
-                <Label text="Use your 9-digit registration number and password." styleClass="subtitle-muted"/>
+                <Label text="Use your registration number and password." styleClass="subtitle-muted"/>
             </VBox>
-            <VBox spacing="12" maxWidth="360" styleClass="form-card">
+            <VBox spacing="14" maxWidth="420" styleClass="form-card auth-form login-shell">
+                <Label text="Student credentials" styleClass="section-title"/>
                 <Label text="Registration Number" styleClass="field-label"/>
                 <TextField fx:id="studentRegNoField" promptText="9-digit registration number"/>
                 <Label text="Password" styleClass="field-label"/>
                 <PasswordField fx:id="studentPasswordField" promptText="Student password"/>
-                <Button text="Login" onAction="#handleLogin" maxWidth="Infinity"/>
+                <Button text="Login" onAction="#handleLogin" maxWidth="Infinity" styleClass="dashboard-action"/>
                 <Button text="Back" onAction="#handleBack" styleClass="button-ghost" maxWidth="Infinity"/>
             </VBox>
         </VBox>

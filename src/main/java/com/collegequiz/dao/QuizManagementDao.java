@@ -68,4 +68,6 @@ public interface QuizManagementDao {
     Student authenticateStudent(Connection connection, String registrationNo, String password) throws SQLException;
 
     Integer findSelectedOptionId(Connection connection, int attemptId, int questionId) throws SQLException;
+
+    String findAttemptStatus(Connection connection, int quizId, int studentId) throws SQLException;
 }

@@ -45,16 +45,27 @@ public class TeacherCreateQuizController extends BaseController {
         }
 
         try {
-            int duration = Integer.parseInt(durationField.getText().trim());
+            String title = quizTitleField.getText().trim();
+            String durationText = durationField.getText().trim();
+            if (title.isBlank() || durationText.isBlank()) {
+                showError("Missing Details", "Quiz title and duration are required.");
+                return;
+            }
+
+            int duration = Integer.parseInt(durationText);
+            if (duration < 1 || duration > 300) {
+                showError("Invalid Duration", "Duration must be between 1 and 300 minutes.");
+                return;
+            }
             LocalDate date = quizDatePicker.getValue() == null ? LocalDate.now() : quizDatePicker.getValue();
             LocalDateTime quizDate = date.atTime(LocalTime.of(10, 0));
-            Integer quizId = service.createQuiz(
-                    quizTitleField.getText().trim(),
+            service.createQuiz(
+                    title,
                     duration,
                     quizDate,
                     subject.subjectId(),
                     AppSession.getLoggedInTeacherId());
-            showInfo("Quiz Created", "Quiz ID " + quizId + " created.");
+            showInfo("Quiz Created", "Quiz created successfully.");
             quizTitleField.clear();
             durationField.clear();
             quizDatePicker.setValue(null);

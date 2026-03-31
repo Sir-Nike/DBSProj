@@ -1,0 +1,79 @@
+# College Quiz Management System: UI and Flow Guide
+
+This note explains how the current JavaFX app is organized and how the main user flows work.
+
+## Login Flow
+
+The app starts on a role-choice screen:
+
+- `Teacher Login`
+- `Student Login`
+
+Each role has its own dedicated login view.
+
+- Teachers log in with a teacher code like `CSE001` and a password.
+- Students log in with their 9-digit registration number and a password.
+
+## Screen Layout
+
+The UI is split into smaller task-focused screens instead of one oversized dashboard.
+
+Teacher screens:
+
+- Teacher home menu
+- Create subject
+- Create quiz
+- Add question
+- Review and publish results
+
+Student screens:
+
+- Student dashboard
+- Quiz attempt screen
+
+## Result Visibility Rule
+
+Student marks are not shown immediately after submission.
+
+- When a student submits a quiz, the app only confirms that the attempt was saved.
+- The score is stored in the database, but the student does not see it right away.
+- Results become visible only after the teacher publishes them.
+- The student dashboard shows only published results through the `VW_STUDENT_PUBLISHED_RESULTS` view.
+
+## Quiz Attempt Flow
+
+The quiz attempt screen shows one question at a time.
+
+- Answers are autosaved as soon as the student picks an option.
+- The selected answer is restored if the student moves back and forth between questions.
+- A countdown timer is displayed at the top.
+- When time runs out, the attempt is auto-submitted.
+
+## Theme Support
+
+The app now supports a lightweight light/dark mode toggle.
+
+- The theme toggle is available on the main screens.
+- The layout stays the same; only the visual palette changes.
+- The styling is intentionally minimal, with flatter buttons, cleaner spacing, and softer contrast.
+
+## Notes On The Current Design
+
+- The teacher-related screens only work with the logged-in teacher’s department where that matters.
+- Completed quizzes are removed from the student’s available quiz list.
+- The project still uses Oracle-backed validation, PL/SQL packages, triggers, and JDBC transaction handling.
+
+## Quick Test Accounts
+
+Teacher:
+
+- `CSE001` / `teach001`
+- `ITE002` / `teach002`
+
+Student:
+
+- `230100101` / `stud1001`
+- `230100102` / `stud1002`
+- `230100103` / `stud1003`
+- `230100104` / `stud1004`
+- `230100105` / `stud1005`
