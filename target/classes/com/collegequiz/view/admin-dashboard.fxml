@@ -4,8 +4,7 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -28,7 +27,7 @@
     </top>
     <center>
         <VBox spacing="14" styleClass="dashboard-layout">
-            <VBox spacing="10" styleClass="panel-card">
+            <VBox spacing="8" styleClass="panel-card">
                 <HBox spacing="12" alignment="CENTER_LEFT">
                     <VBox spacing="4" HBox.hgrow="ALWAYS">
                         <Label text="Overview" styleClass="section-title"/>
@@ -39,23 +38,23 @@
                         <Label fx:id="adminLabel" text="admin" styleClass="stat-value"/>
                     </VBox>
                 </HBox>
-                <HBox spacing="12" styleClass="summary-strip">
-                    <VBox spacing="4" styleClass="stat-card" HBox.hgrow="ALWAYS">
+                <HBox spacing="10" styleClass="summary-strip">
+                    <VBox spacing="2" styleClass="stat-card" HBox.hgrow="ALWAYS">
                         <Label text="Teachers" styleClass="stat-label"/>
                         <Label fx:id="teacherCountLabel" text="0" styleClass="stat-value"/>
                     </VBox>
-                    <VBox spacing="4" styleClass="stat-card" HBox.hgrow="ALWAYS">
+                    <VBox spacing="2" styleClass="stat-card" HBox.hgrow="ALWAYS">
                         <Label text="Students" styleClass="stat-label"/>
                         <Label fx:id="studentCountLabel" text="0" styleClass="stat-value"/>
                     </VBox>
-                    <VBox spacing="4" styleClass="stat-card" HBox.hgrow="ALWAYS">
+                    <VBox spacing="2" styleClass="stat-card" HBox.hgrow="ALWAYS">
                         <Label text="Departments" styleClass="stat-label"/>
                         <Label fx:id="departmentCountLabel" text="0" styleClass="stat-value"/>
                     </VBox>
                 </HBox>
             </VBox>
 
-            <HBox spacing="14">
+            <HBox spacing="12">
                 <VBox spacing="12" styleClass="panel-card" HBox.hgrow="ALWAYS">
                     <Label text="Create Department" styleClass="section-title"/>
                     <Label text="Departments drive teacher code generation and subject grouping." styleClass="subtitle-muted"/>
@@ -109,13 +108,7 @@
                             <Button text="Add Teacher" onAction="#handleAddTeacher" maxWidth="Infinity" styleClass="dashboard-action" GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.columnSpan="2"/>
                         </children>
                     </GridPane>
-                    <TableView fx:id="teacherTable" prefHeight="210" VBox.vgrow="ALWAYS">
-                        <columns>
-                            <TableColumn fx:id="teacherCodeColumn" text="Code" prefWidth="110"/>
-                            <TableColumn fx:id="teacherNameColumn" text="Name" prefWidth="180"/>
-                            <TableColumn fx:id="teacherDepartmentColumn" text="Department" prefWidth="320"/>
-                        </columns>
-                    </TableView>
+                    <ListView fx:id="teacherListView" prefHeight="0.0" VBox.vgrow="ALWAYS"/>
                 </VBox>
 
                 <VBox spacing="12" styleClass="panel-card" HBox.hgrow="ALWAYS">
@@ -151,13 +144,7 @@
                             <Button text="Add Student" onAction="#handleAddStudent" maxWidth="Infinity" styleClass="dashboard-action" GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.columnSpan="2"/>
                         </children>
                     </GridPane>
-                    <TableView fx:id="studentTable" prefHeight="210" VBox.vgrow="ALWAYS">
-                        <columns>
-                            <TableColumn fx:id="studentRegColumn" text="Reg No" prefWidth="120"/>
-                            <TableColumn fx:id="studentNameColumn" text="Name" prefWidth="180"/>
-                            <TableColumn fx:id="studentDepartmentColumn" text="Department" prefWidth="320"/>
-                        </columns>
-                    </TableView>
+                    <ListView fx:id="studentListView" prefHeight="0.0" VBox.vgrow="ALWAYS"/>
                 </VBox>
             </HBox>
 

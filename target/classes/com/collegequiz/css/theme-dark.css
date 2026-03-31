@@ -115,6 +115,23 @@
     -fx-background-color: #16233a;
 }
 
+.list-view {
+    -fx-background-color: #111b2f;
+    -fx-border-color: #24324a;
+}
+
+.list-view .list-cell {
+    -fx-text-fill: #e7eef8;
+}
+
+.list-view .list-cell:filled:selected {
+    -fx-background-color: #1a2e52;
+}
+
+.list-view .list-cell:filled:hover {
+    -fx-background-color: #16233a;
+}
+
 .timer-badge {
     -fx-background-color: #1b2942;
     -fx-text-fill: #f2f6fb;
@@ -123,6 +140,14 @@
 .stat-card {
     -fx-background-color: #16233a;
     -fx-border-color: #24324a;
+}
+
+.stat-value {
+    -fx-text-fill: #f2f6fb;
+}
+
+.stat-label {
+    -fx-text-fill: #9db0c7;
 }
 
 .option-chip {

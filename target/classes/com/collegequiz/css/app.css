@@ -85,7 +85,7 @@
 }
 
 .dashboard-layout .panel-card {
-    -fx-padding: 18 20 18 20;
+    -fx-padding: 14 18 14 18;
 }
 
 .toolbar-row {
@@ -309,6 +309,29 @@
 .table-view .column-header,
 .table-view .filler {
     -fx-background-color: transparent;
+}
+
+.list-view {
+    -fx-background-color: white;
+    -fx-background-radius: 14;
+    -fx-border-color: #dbe4ef;
+    -fx-border-radius: 14;
+}
+
+.list-view .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: #14243b;
+    -fx-padding: 10 12 10 12;
+    -fx-font-size: 13px;
+}
+
+.list-view .list-cell:filled:selected {
+    -fx-background-color: rgba(31, 102, 255, 0.14);
+    -fx-text-fill: #14243b;
+}
+
+.list-view .list-cell:filled:hover {
+    -fx-background-color: #eef3fa;
 }
 
 .question-card {

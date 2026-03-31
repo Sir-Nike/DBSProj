@@ -111,6 +111,23 @@
     -fx-background-color: #f0f4fa;
 }
 
+.list-view {
+    -fx-background-color: white;
+    -fx-border-color: #dce5f0;
+}
+
+.list-view .list-cell {
+    -fx-text-fill: #14243b;
+}
+
+.list-view .list-cell:filled:selected {
+    -fx-background-color: rgba(31, 102, 255, 0.16);
+}
+
+.list-view .list-cell:filled:hover {
+    -fx-background-color: #eef3fa;
+}
+
 .timer-badge {
     -fx-background-color: #eaf0f7;
     -fx-text-fill: #14243b;

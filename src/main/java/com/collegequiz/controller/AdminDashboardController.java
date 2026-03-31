@@ -3,17 +3,16 @@ package com.collegequiz.controller;
 import com.collegequiz.model.Department;
 import com.collegequiz.model.Student;
 import com.collegequiz.model.Teacher;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.util.Callback;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,19 +28,13 @@ public class AdminDashboardController extends BaseController {
     @FXML private ComboBox<Department> teacherDepartmentCombo;
     @FXML private TextField teacherNameField;
     @FXML private TextField teacherPasswordField;
-    @FXML private TableView<Teacher> teacherTable;
-    @FXML private TableColumn<Teacher, String> teacherCodeColumn;
-    @FXML private TableColumn<Teacher, String> teacherNameColumn;
-    @FXML private TableColumn<Teacher, String> teacherDepartmentColumn;
+    @FXML private ListView<Teacher> teacherListView;
 
     @FXML private ComboBox<Department> studentDepartmentCombo;
     @FXML private TextField studentRegNoField;
     @FXML private TextField studentNameField;
     @FXML private TextField studentPasswordField;
-    @FXML private TableView<Student> studentTable;
-    @FXML private TableColumn<Student, String> studentRegColumn;
-    @FXML private TableColumn<Student, String> studentNameColumn;
-    @FXML private TableColumn<Student, String> studentDepartmentColumn;
+    @FXML private ListView<Student> studentListView;
 
     private List<Department> departments;
 
@@ -54,18 +47,10 @@ public class AdminDashboardController extends BaseController {
         }
 
         adminLabel.setText(AppSession.getLoggedInAdminUsername());
-        teacherCodeColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().teacherCode()));
-        teacherNameColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().name()));
-        teacherDepartmentColumn.setCellValueFactory(data -> new SimpleStringProperty(departmentName(data.getValue().departmentId())));
-        studentRegColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().registrationNo()));
-        studentNameColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().name()));
-        studentDepartmentColumn.setCellValueFactory(data -> new SimpleStringProperty(departmentName(data.getValue().departmentId())));
-        teacherTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
-        studentTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
-        teacherTable.setFixedCellSize(34);
-        studentTable.setFixedCellSize(34);
-        teacherTable.setPlaceholder(new Label("No teachers added yet."));
-        studentTable.setPlaceholder(new Label("No students added yet."));
+        teacherListView.setCellFactory(createTeacherCellFactory());
+        studentListView.setCellFactory(createStudentCellFactory());
+        teacherListView.setPlaceholder(new Label("No teachers added yet."));
+        studentListView.setPlaceholder(new Label("No students added yet."));
         teacherDepartmentCombo.setPromptText("Select department");
         studentDepartmentCombo.setPromptText("Select department");
         refreshData();
@@ -216,8 +201,8 @@ public class AdminDashboardController extends BaseController {
 
             List<Teacher> teachers = service.getAllTeachers();
             List<Student> students = service.getAllStudents();
-            teacherTable.setItems(FXCollections.observableArrayList(teachers));
-            studentTable.setItems(FXCollections.observableArrayList(students));
+            teacherListView.setItems(FXCollections.observableArrayList(teachers));
+            studentListView.setItems(FXCollections.observableArrayList(students));
 
             teacherCountLabel.setText(String.valueOf(teachers.size()));
             studentCountLabel.setText(String.valueOf(students.size()));
@@ -226,8 +211,8 @@ public class AdminDashboardController extends BaseController {
             departments = List.of();
             teacherDepartmentCombo.setItems(FXCollections.emptyObservableList());
             studentDepartmentCombo.setItems(FXCollections.emptyObservableList());
-            teacherTable.setItems(FXCollections.emptyObservableList());
-            studentTable.setItems(FXCollections.emptyObservableList());
+            teacherListView.setItems(FXCollections.emptyObservableList());
+            studentListView.setItems(FXCollections.emptyObservableList());
             teacherCountLabel.setText("0");
             studentCountLabel.setText("0");
             departmentCountLabel.setText("0");
@@ -244,6 +229,36 @@ public class AdminDashboardController extends BaseController {
                 .findFirst()
                 .map(Department::departmentName)
                 .orElse("Department #" + departmentId);
+    }
+
+    private javafx.util.Callback<ListView<Teacher>, ListCell<Teacher>> createTeacherCellFactory() {
+        return list -> new ListCell<>() {
+            @Override
+            protected void updateItem(Teacher teacher, boolean empty) {
+                super.updateItem(teacher, empty);
+                if (empty || teacher == null) {
+                    setText(null);
+                    setGraphic(null);
+                } else {
+                    setText(teacher.teacherCode() + " · " + teacher.name() + " · " + departmentName(teacher.departmentId()));
+                }
+            }
+        };
+    }
+
+    private javafx.util.Callback<ListView<Student>, ListCell<Student>> createStudentCellFactory() {
+        return list -> new ListCell<>() {
+            @Override
+            protected void updateItem(Student student, boolean empty) {
+                super.updateItem(student, empty);
+                if (empty || student == null) {
+                    setText(null);
+                    setGraphic(null);
+                } else {
+                    setText(student.registrationNo() + " · " + student.name() + " · " + departmentName(student.departmentId()));
+                }
+            }
+        };
     }
 
     private boolean confirm(String title, String message) {
